@@ -2757,6 +2757,162 @@ body:not(.is-admin) .card__delete-btn { display: none !important; }
   display: flex;
   flex-direction: column;
 }
+
+/* Realtime Cloud Bar & Settings */
+.appointments-cloud-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 24px;
+  background: #f0fdf4;
+  border-bottom: 1px solid #bbf7d0;
+}
+.cloud-status-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #166534;
+}
+.cloud-pulse-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #16a34a;
+  box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7);
+  animation: cloudPulseAnim 2s infinite;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.cloud-pulse-dot.is-syncing {
+  background: #f59e0b;
+  box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+  animation: cloudPulseAnim 0.8s infinite;
+}
+.cloud-pulse-dot.is-error {
+  background: #dc2626;
+  box-shadow: none;
+  animation: none;
+}
+@keyframes cloudPulseAnim {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 7px rgba(22, 163, 74, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+}
+.cloud-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.btn--xs {
+  padding: 4px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all var(--tr-fast);
+}
+.btn--xs.btn--outline {
+  border: 1px solid #86efac;
+  background: #ffffff;
+  color: #166534;
+}
+.btn--xs.btn--outline:hover {
+  background: #dcfce7;
+  border-color: #4ade80;
+}
+.btn--xs.btn--ghost {
+  border: 1px dashed #bbf7d0;
+  background: transparent;
+  color: #15803d;
+}
+.btn--xs.btn--ghost:hover {
+  background: #ffffff;
+}
+
+/* Collapsible Settings Panel */
+.cloud-config-panel {
+  padding: 16px 24px;
+  background: #ffffff;
+  border-bottom: 2px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: slideDownFade 0.25s ease-out;
+}
+@keyframes slideDownFade {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.cloud-config-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cloud-config-header h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--clr-text);
+  margin: 0;
+}
+.cloud-config-close {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.cloud-config-close:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+.cloud-config-desc {
+  font-size: 12.5px;
+  color: #4b5563;
+  line-height: 1.5;
+  margin: 0;
+}
+.form-input--sm {
+  padding: 6px 10px;
+  font-size: 13px;
+}
+.form-hint {
+  font-size: 11.5px;
+  color: #6b7280;
+  margin-top: 4px;
+  display: block;
+}
+.cloud-config-extra {
+  padding-top: 10px;
+  border-top: 1px dashed #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.cloud-config-buttons {
+  display: flex;
+  gap: 10px;
+}
+.badge-count.has-alert {
+  background: #ef4444 !important;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.7);
+  animation: pulseBadgeAlert 1.5s infinite;
+}
+@keyframes pulseBadgeAlert {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
 .appointments-toolbar {
   display: flex;
   justify-content: space-between;
@@ -3125,5 +3281,17 @@ body:not(.is-admin) .card__delete-btn { display: none !important; }
     display: inline;
     font-size: 11px;
     color: #cbd5e1;
+  }
+
+  /* Appointments Cloud Bar Mobile Adjustments */
+  .appointments-cloud-bar {
+    padding: 8px 12px;
+  }
+  .cloud-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .cloud-config-panel {
+    padding: 12px;
   }
 }

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="referrer" content="no-referrer" />
   <title>Thảo Anh Apartment – Căn Hộ Dịch Vụ Đà Lạt</title>
-  <link rel="stylesheet" href="style.css?v=19" />
+  <link rel="stylesheet" href="style.css?v=20" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700;1,800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -747,6 +747,66 @@ Hệ thống sẽ tự nhận diện Giá, Vị trí và danh sách Nội thất
         </div>
       </div>
 
+      <!-- Cloud Realtime Sync Bar -->
+      <div class="appointments-cloud-bar">
+        <div class="cloud-status-info">
+          <span class="cloud-pulse-dot" id="cloudPulseDot"></span>
+          <span class="cloud-status-text" id="cloudStatusText">🟢 Đang kết nối Realtime Cloud...</span>
+        </div>
+        <div class="cloud-actions">
+          <button type="button" class="btn btn--xs btn--outline" id="btnManualSyncCloud" title="Tải ngay các lịch hẹn mới từ khách hàng khắp nơi">
+            🔄 Đồng bộ ngay
+          </button>
+          <button type="button" class="btn btn--xs btn--outline" id="btnEnableBrowserNotif" title="Bật âm thanh chuông và thông báo">
+            🔔 Bật chuông
+          </button>
+          <button type="button" class="btn btn--xs btn--ghost" id="btnToggleCloudConfig" title="Cài đặt kênh thông báo & điện thoại">
+            ⚙️ Cài đặt báo về máy
+          </button>
+        </div>
+      </div>
+
+      <!-- Cloud / Phone Push Settings Panel (Toggleable) -->
+      <div class="cloud-config-panel hidden" id="cloudConfigPanel">
+        <div class="cloud-config-header">
+          <h4>📱 Nhận Thông Báo Trực Tiếp Về Điện Thoại & Đa Máy (Realtime)</h4>
+          <button type="button" class="cloud-config-close" id="btnCloseConfig" aria-label="Đóng cài đặt">✕</button>
+        </div>
+        <p class="cloud-config-desc">
+          Mỗi khi khách đặt lịch hẹn trên máy tính hay điện thoại của họ, hệ thống sẽ tự động đồng bộ ngay lập tức về máy Admin. Bạn có thể cài app <strong>ntfy</strong> (miễn phí trên iPhone / Android) và đăng ký kênh bên dưới để điện thoại tự động đổ chuông và rung báo khi có khách mới 24/7!
+        </p>
+        <div class="form-row">
+          <div class="form-group flex-2">
+            <label for="cfgCloudTopic">Kênh thông báo Realtime (Topic):</label>
+            <input type="text" id="cfgCloudTopic" class="form-input form-input--sm" value="thaoanh_bookings_dalat_karty" placeholder="Vd: thaoanh_bookings_dalat_karty" />
+            <small class="form-hint">Mở app <strong>ntfy</strong> trên điện thoại & bấm <em>Subscribe</em> kênh này để nhận chuông điện thoại kèm nút "Gọi khách / Nhắn Zalo" ngay lập tức.</small>
+          </div>
+          <div class="form-group flex-1">
+            <label>&nbsp;</label>
+            <button type="button" class="btn btn--sm btn--primary w-100" id="btnSaveNotificationConfig">
+              💾 Lưu Kênh
+            </button>
+          </div>
+        </div>
+        <div class="cloud-config-extra">
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="cfgTelegramToken">Telegram Bot Token (tuỳ chọn):</label>
+              <input type="text" id="cfgTelegramToken" class="form-input form-input--sm" placeholder="123456789:ABCdefGHI..." />
+            </div>
+            <div class="form-group flex-1">
+              <label for="cfgTelegramChatId">Telegram Chat ID (tuỳ chọn):</label>
+              <input type="text" id="cfgTelegramChatId" class="form-input form-input--sm" placeholder="Vd: 987654321 hoặc @tenkenh" />
+            </div>
+          </div>
+          <div class="cloud-config-buttons">
+            <button type="button" class="btn btn--xs btn--secondary" id="btnTestNotification">
+              🧪 Bắn thử 1 thông báo chuông kiểm tra
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div class="appointments-toolbar">
         <div class="apt-stat-filters">
           <button class="apt-pill active" data-filter="all">Tất cả (<span id="countAptAll">0</span>)</button>
@@ -883,6 +943,6 @@ Hệ thống sẽ tự nhận diện Giá, Vị trí và danh sách Nội thất
   </div>
 
   <script src="apify-data.js?v=2"></script>
-  <script src="app.js?v=17"></script>
+  <script src="app.js?v=18"></script>
 </body>
 </html>

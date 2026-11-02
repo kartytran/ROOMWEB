@@ -629,53 +629,429 @@ function saveBookings(list) {
 }
 
 /* ============================================================
-   NETLIFY & CLOUD REALTIME SYNC (LƯU TRỮ VĨNH VIỄN & THỜI GIAN THỰC)
+   NETLIFY & CLOUD REALTIME SYNC (ĐỒNG BỘ ĐA MÁY & THỜI GIAN THỰC)
    ============================================================ */
-const CLOUD_STORAGE_ENDPOINT_KEY = 'thaoanh_cloud_db_endpoint';
+const CLOUD_TOPIC_DEFAULT         = 'thaoanh_bookings_dalat_karty';
+const STORAGE_CLOUD_TOPIC_KEY     = 'thaoanh_cfg_cloud_topic';
+const STORAGE_TELEGRAM_TOKEN_KEY  = 'thaoanh_cfg_tg_token';
+const STORAGE_TELEGRAM_CHATID_KEY = 'thaoanh_cfg_tg_chatid';
 
-function getCloudEndpoint() {
-  return localStorage.getItem(CLOUD_STORAGE_ENDPOINT_KEY) || '';
+let realtimeEventSource = null;
+let realtimeHeartbeatTimer = null;
+
+function getCloudTopic() {
+  const custom = localStorage.getItem(STORAGE_CLOUD_TOPIC_KEY);
+  return (custom && custom.trim()) ? custom.trim() : CLOUD_TOPIC_DEFAULT;
 }
 
-async function syncBookingToCloud(booking) {
-  const endpoint = getCloudEndpoint();
-  if (!endpoint) return;
-
+// ── ÂM THANH CHUÔNG THÔNG BÁO (WEB AUDIO API - KHÔNG CẦN FILE NGOÀI) ──
+function playNotificationChime() {
   try {
-    await fetch(`${endpoint.replace(/\/$/, '')}/bookings.json`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(booking)
-    });
-    console.log('Booking synced to Cloud Realtime successfully!');
-  } catch (e) {
-    console.warn('Cloud sync notice:', e);
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    if (ctx.state === 'suspended') {
+      ctx.resume().catch(() => {});
+    }
+
+    const t0 = ctx.currentTime + 0.05;
+
+    // Âm nốt 1: D5 (587.33 Hz)
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(587.33, t0);
+    gain1.gain.setValueAtTime(0.35, t0);
+    gain1.gain.exponentialRampToValueAtTime(0.001, t0 + 0.55);
+    osc1.connect(gain1);
+    gain1.connect(ctx.destination);
+    osc1.start(t0);
+    osc1.stop(t0 + 0.55);
+
+    // Âm nốt 2: A5 (880.00 Hz)
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(880.0, t0 + 0.16);
+    gain2.gain.setValueAtTime(0.4, t0 + 0.16);
+    gain2.gain.exponentialRampToValueAtTime(0.001, t0 + 0.85);
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    osc2.start(t0 + 0.16);
+    osc2.stop(t0 + 0.85);
+
+    // Âm nốt 3: D6 (1174.66 Hz - ngân vang chuông cửa lễ tân khách sạn)
+    const osc3 = ctx.createOscillator();
+    const gain3 = ctx.createGain();
+    osc3.type = 'triangle';
+    osc3.frequency.setValueAtTime(1174.66, t0 + 0.32);
+    gain3.gain.setValueAtTime(0.35, t0 + 0.32);
+    gain3.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.25);
+    osc3.connect(gain3);
+    gain3.connect(ctx.destination);
+    osc3.start(t0 + 0.32);
+    osc3.stop(t0 + 1.25);
+  } catch (err) {
+    console.warn('Audio chime warning:', err);
   }
 }
 
-async function fetchBookingsFromCloud() {
-  const endpoint = getCloudEndpoint();
-  if (!endpoint) return;
+// ── BẬT THÔNG BÁO TRÌNH DUYỆT (DESKTOP NOTIFICATION) ──
+function requestBrowserNotificationPermission() {
+  if (!('Notification' in window)) {
+    alert('Trình duyệt hiện tại chưa hỗ trợ Web Notifications.');
+    return;
+  }
+  if (Notification.permission === 'granted') {
+    showToast('🔔 Thông báo chuông & trình duyệt đã sẵn sàng!');
+    playNotificationChime();
+    return;
+  }
+  Notification.requestPermission().then(permission => {
+    if (permission === 'granted') {
+      showToast('✅ Đã bật thông báo trình duyệt thành công!');
+      playNotificationChime();
+      try {
+        new Notification('🔔 Thảo Anh Apartment Admin', {
+          body: 'Đã kết nối thông báo Realtime thành công!',
+          icon: 'logo.png'
+        });
+      } catch (_) {}
+    } else {
+      showToast('⚠️ Bạn chưa cấp quyền thông báo trên trình duyệt này.');
+    }
+  });
+}
+
+function triggerDesktopNotification(booking) {
+  if (!('Notification' in window) || Notification.permission !== 'granted' || !booking) return;
+  try {
+    const notif = new Notification(`📅 Lịch Hẹn Mới: ${booking.customerName}`, {
+      body: `📞 ${booking.customerPhone} | 🏡 ${booking.aptName}\n⏰ ${booking.bookDate} (${booking.timeSlot})`,
+      icon: 'logo.png',
+      badge: 'logo.png',
+      tag: booking.id
+    });
+    notif.onclick = () => {
+      window.focus();
+      openAppointmentsModal();
+    };
+  } catch (err) {
+    console.warn('Desktop notif error:', err);
+  }
+}
+
+// ── GỬI LỊCH HẸN LÊN CLOUD REALTIME KHI KHÁCH ĐẶT TRÊN BẤT KỲ THIẾT BỊ NÀO ──
+async function broadcastBookingToCloud(booking) {
+  const topic = getCloudTopic();
+  const cleanPhone = (booking.customerPhone || '').replace(/\D/g, '');
+  const title = `📅 Lịch Hẹn Mới: ${booking.customerName} (${booking.customerPhone})`;
+
+  // 1. Đẩy lên kênh Realtime ntfy.sh (hoạt động đa máy tức thì, có chuông app điện thoại)
+  try {
+    const payload = {
+      topic: topic,
+      title: title,
+      message: JSON.stringify(booking),
+      priority: 4, // High priority (chuông to)
+      tags: ['calendar', 'bell', 'house'],
+      actions: [
+        { action: 'view', label: '📞 Gọi khách', url: `tel:${cleanPhone}` },
+        { action: 'view', label: '💬 Nhắn Zalo', url: `https://zalo.me/${cleanPhone}` }
+      ]
+    };
+
+    fetch('https://ntfy.sh', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify(payload)
+    }).then(res => {
+      if (res.ok) console.log('✅ Đã đồng bộ lịch hẹn lên Cloud Realtime thành công!');
+    }).catch(err => console.warn('ntfy broadcast error:', err));
+  } catch (e) {
+    console.warn('Cloud broadcast notice:', e);
+  }
+
+  // 2. Gửi Telegram nếu Admin đã cài đặt Token & ChatID
+  const tgToken = (localStorage.getItem(STORAGE_TELEGRAM_TOKEN_KEY) || '').trim();
+  const tgChatId = (localStorage.getItem(STORAGE_TELEGRAM_CHATID_KEY) || '').trim();
+  if (tgToken && tgChatId) {
+    try {
+      const msg = `🔔 *CÓ LỊCH HẸN XEM PHÒNG MỚI!*\n\n` +
+        `👤 *Khách hàng:* ${booking.customerName}\n` +
+        `📞 *Số điện thoại:* ${booking.customerPhone}\n` +
+        `🏡 *Căn hộ:* ${booking.aptName}\n` +
+        `⏰ *Thời gian hẹn:* ${booking.bookDate} (${booking.timeSlot})\n` +
+        (booking.notes ? `📝 *Ghi chú:* ${booking.notes}\n` : '') +
+        `\n👉 [Gọi khách ngay](tel:${cleanPhone})  |  [Nhắn Zalo](https://zalo.me/${cleanPhone})`;
+
+      fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: tgChatId,
+          text: msg,
+          parse_mode: 'Markdown'
+        })
+      }).catch(err => console.warn('Telegram notify error:', err));
+    } catch (err) {
+      console.warn('Telegram error:', err);
+    }
+  }
+}
+
+// ── TỔNG HỢP VÀ HÒA TRỘN LỊCH HẸN TỪ CLOUD VÀO BỘ NHỚ LOCAL ──
+function mergeCloudBookings(cloudBookings) {
+  const localBookings = getBookings();
+  const localMap = new Map();
+  localBookings.forEach(b => { if (b.id) localMap.set(b.id, b); });
+
+  let newCount = 0;
+  let newestBooking = null;
+
+  cloudBookings.forEach(cb => {
+    if (!cb.id) return;
+    if (!localMap.has(cb.id)) {
+      // Lịch hẹn mới từ thiết bị khác!
+      localMap.set(cb.id, cb);
+      newCount++;
+      if (!newestBooking || new Date(cb.createdAt) > new Date(newestBooking.createdAt)) {
+        newestBooking = cb;
+      }
+    } else {
+      // Đã có: giữ nguyên trạng thái Admin đã cập nhật (confirmed/done...), nhưng bổ sung nếu thiếu trường
+      const existing = localMap.get(cb.id);
+      localMap.set(cb.id, { ...cb, ...existing });
+    }
+  });
+
+  const merged = Array.from(localMap.values()).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  localStorage.setItem(STORAGE_BOOKINGS_KEY, JSON.stringify(merged));
+  updateBookingBadges();
+
+  return { newCount, newestBooking, totalCount: merged.length };
+}
+
+// ── TẢI CÁC LỊCH HẸN TỪ CLOUD (POLLING / REFRESH) ──
+async function fetchBookingsFromCloud(isBackground = false) {
+  const topic = getCloudTopic();
+  const dotEl = $('#cloudPulseDot');
+  const textEl = $('#cloudStatusText');
+
+  if (!isBackground) {
+    if (dotEl) dotEl.className = 'cloud-pulse-dot is-syncing';
+    if (textEl) textEl.textContent = '🔄 Đang đồng bộ từ Realtime Cloud...';
+  }
 
   try {
-    const res = await fetch(`${endpoint.replace(/\/$/, '')}/bookings.json`);
-    if (res.ok) {
-      const data = await res.json();
-      if (data && typeof data === 'object') {
-        const cloudBookings = Object.keys(data).map(k => ({ ...data[k], cloudKey: k }));
-        const localBookings = getBookings();
-        const mergedMap = new Map();
-        [...localBookings, ...cloudBookings].forEach(b => {
-          if (b.id) mergedMap.set(b.id, b);
-        });
-        const merged = Array.from(mergedMap.values()).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        localStorage.setItem(STORAGE_BOOKINGS_KEY, JSON.stringify(merged));
-        updateBookingBadges();
-        if (typeof renderAppointmentsList === 'function') renderAppointmentsList();
+    const res = await fetch(`https://ntfy.sh/${topic}/json?poll=1`);
+    if (!res.ok) throw new Error('Cloud HTTP ' + res.status);
+
+    const ndjson = await res.text();
+    const lines = ndjson.trim().split('\n');
+    const cloudBookings = [];
+
+    for (const line of lines) {
+      if (!line) continue;
+      try {
+        const item = JSON.parse(line);
+        if (item.event === 'message' && item.message) {
+          let b = null;
+          try {
+            b = JSON.parse(item.message);
+          } catch (_) {
+            // Chuỗi tin nhắn không phải JSON
+          }
+          if (b && typeof b === 'object' && b.id && b.customerPhone) {
+            cloudBookings.push(b);
+          }
+        }
+      } catch (_) {}
+    }
+
+    const { newCount, newestBooking, totalCount } = mergeCloudBookings(cloudBookings);
+
+    if (dotEl) dotEl.className = 'cloud-pulse-dot';
+    if (textEl) {
+      const nowStr = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      textEl.textContent = `🟢 Đã kết nối Realtime • ${totalCount} lịch hẹn (${nowStr})`;
+    }
+
+    // Nếu phát hiện có lịch hẹn mới từ thiết bị khác và Admin đang xem
+    if (newCount > 0) {
+      playNotificationChime();
+      if (newestBooking) {
+        showToast(`🔔 CÓ ${newCount} LỊCH HẸN MỚI TỪ: ${newestBooking.customerName} (${newestBooking.customerPhone})!`, 7000);
+        triggerDesktopNotification(newestBooking);
+      }
+      if ($('#appointmentsModalOverlay') && $('#appointmentsModalOverlay').classList.contains('active')) {
+        renderAppointmentsList();
+      }
+    } else if (!isBackground) {
+      showToast(`✅ Đã đồng bộ xong! Tổng số: ${totalCount} lịch hẹn.`);
+      if ($('#appointmentsModalOverlay') && $('#appointmentsModalOverlay').classList.contains('active')) {
+        renderAppointmentsList();
       }
     }
+  } catch (err) {
+    console.warn('fetchBookingsFromCloud notice:', err);
+    if (!isBackground) {
+      if (dotEl) dotEl.className = 'cloud-pulse-dot is-error';
+      if (textEl) textEl.textContent = '⚠️ Chưa lấy được dữ liệu mới (kiểm tra mạng)';
+      showToast('⚠️ Không thể kết nối tới Cloud Realtime. Vui lòng kiểm tra lại mạng.');
+    }
+  }
+}
+
+// ── KẾT NỐI SSE REALTIME STREAM (LẮNG NGHE TỨC THỜI NGAY KHI CÓ KHÁCH ĐẶT) ──
+function startCloudRealtimeStream() {
+  if (realtimeEventSource) {
+    try { realtimeEventSource.close(); } catch (_) {}
+    realtimeEventSource = null;
+  }
+
+  const topic = getCloudTopic();
+  try {
+    realtimeEventSource = new EventSource(`https://ntfy.sh/${topic}/sse`);
+
+    realtimeEventSource.onopen = () => {
+      const dotEl = $('#cloudPulseDot');
+      const textEl = $('#cloudStatusText');
+      if (dotEl) dotEl.className = 'cloud-pulse-dot';
+      if (textEl) textEl.textContent = '🟢 Realtime Đang Trực Tuyến';
+    };
+
+    realtimeEventSource.onmessage = (event) => {
+      try {
+        const item = JSON.parse(event.data);
+        if (item.event === 'message' && item.message) {
+          let b = null;
+          try { b = JSON.parse(item.message); } catch (_) {}
+          if (b && b.id && b.customerPhone) {
+            const { newCount } = mergeCloudBookings([b]);
+            if (newCount > 0) {
+              playNotificationChime();
+              showToast(`🔔 CÓ LỊCH HẸN MỚI TỨC THÌ: ${b.customerName} (${b.customerPhone})!`, 7000);
+              triggerDesktopNotification(b);
+              if ($('#appointmentsModalOverlay') && $('#appointmentsModalOverlay').classList.contains('active')) {
+                renderAppointmentsList();
+              }
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('Realtime SSE message parse:', e);
+      }
+    };
+
+    realtimeEventSource.onerror = () => {
+      const dotEl = $('#cloudPulseDot');
+      if (dotEl) dotEl.className = 'cloud-pulse-dot is-syncing';
+    };
   } catch (e) {
-    console.warn('Cloud fetch notice:', e);
+    console.warn('EventSource init error:', e);
+  }
+
+  // Chạy thêm Heartbeat Polling mỗi 20s để đảm bảo tuyệt đối không bỏ sót
+  if (realtimeHeartbeatTimer) clearInterval(realtimeHeartbeatTimer);
+  realtimeHeartbeatTimer = setInterval(() => {
+    fetchBookingsFromCloud(true);
+  }, 20000);
+}
+
+function stopCloudRealtimeStream() {
+  if (realtimeEventSource) {
+    try { realtimeEventSource.close(); } catch (_) {}
+    realtimeEventSource = null;
+  }
+  if (realtimeHeartbeatTimer) {
+    clearInterval(realtimeHeartbeatTimer);
+    realtimeHeartbeatTimer = null;
+  }
+}
+
+// ── GẮN SỰ KIỆN GIAO DIỆN THANH REALTIME & CÀI ĐẶT THÔNG BÁO ──
+let cloudUIInitialized = false;
+function initAppointmentsCloudUI() {
+  if (cloudUIInitialized) return;
+  cloudUIInitialized = true;
+
+  const btnSync = $('#btnManualSyncCloud');
+  const btnEnableNotif = $('#btnEnableBrowserNotif');
+  const btnToggleConfig = $('#btnToggleCloudConfig');
+  const btnCloseConfig = $('#btnCloseConfig');
+  const configPanel = $('#cloudConfigPanel');
+  const btnSaveConfig = $('#btnSaveNotificationConfig');
+  const btnTestNotif = $('#btnTestNotification');
+
+  const inputTopic = $('#cfgCloudTopic');
+  const inputTgToken = $('#cfgTelegramToken');
+  const inputTgChatId = $('#cfgTelegramChatId');
+
+  if (inputTopic) inputTopic.value = getCloudTopic();
+  if (inputTgToken) inputTgToken.value = localStorage.getItem(STORAGE_TELEGRAM_TOKEN_KEY) || '';
+  if (inputTgChatId) inputTgChatId.value = localStorage.getItem(STORAGE_TELEGRAM_CHATID_KEY) || '';
+
+  if (btnSync) {
+    btnSync.addEventListener('click', () => fetchBookingsFromCloud(false));
+  }
+
+  if (btnEnableNotif) {
+    btnEnableNotif.addEventListener('click', requestBrowserNotificationPermission);
+  }
+
+  if (btnToggleConfig && configPanel) {
+    btnToggleConfig.addEventListener('click', () => {
+      configPanel.classList.toggle('hidden');
+    });
+  }
+
+  if (btnCloseConfig && configPanel) {
+    btnCloseConfig.addEventListener('click', () => {
+      configPanel.classList.add('hidden');
+    });
+  }
+
+  if (btnSaveConfig) {
+    btnSaveConfig.addEventListener('click', () => {
+      const topicVal = inputTopic ? inputTopic.value.trim() : '';
+      const tgTokenVal = inputTgToken ? inputTgToken.value.trim() : '';
+      const tgChatVal = inputTgChatId ? inputTgChatId.value.trim() : '';
+
+      localStorage.setItem(STORAGE_CLOUD_TOPIC_KEY, topicVal || CLOUD_TOPIC_DEFAULT);
+      if (tgTokenVal) localStorage.setItem(STORAGE_TELEGRAM_TOKEN_KEY, tgTokenVal);
+      else localStorage.removeItem(STORAGE_TELEGRAM_TOKEN_KEY);
+
+      if (tgChatVal) localStorage.setItem(STORAGE_TELEGRAM_CHATID_KEY, tgChatVal);
+      else localStorage.removeItem(STORAGE_TELEGRAM_CHATID_KEY);
+
+      showToast('💾 Đã lưu cấu hình kênh thông báo thành công!');
+      if (isAdminLoggedIn()) {
+        startCloudRealtimeStream();
+        fetchBookingsFromCloud(false);
+      }
+    });
+  }
+
+  if (btnTestNotif) {
+    btnTestNotif.addEventListener('click', () => {
+      playNotificationChime();
+      const testBooking = {
+        id: 'BK-TEST-' + Math.floor(Math.random() * 1000),
+        aptName: 'Căn Hộ Thảo Anh (Bắn Thử Chuông)',
+        customerName: 'Kiểm Tra Chuông Thông Báo',
+        customerPhone: '0559521514',
+        bookDate: new Date().toISOString().split('T')[0],
+        timeSlot: '09:00 - 11:30',
+        notes: 'Tin nhắn thử nghiệm chuông báo và đồng bộ realtime',
+        status: 'pending',
+        createdAt: new Date().toISOString()
+      };
+      broadcastBookingToCloud(testBooking);
+      triggerDesktopNotification(testBooking);
+      showToast('🔔 Đã bắn 1 thông báo thử nghiệm! Hãy kiểm tra chuông trên điện thoại & danh sách.');
+      setTimeout(() => fetchBookingsFromCloud(false), 800);
+    });
   }
 }
 
@@ -690,7 +1066,10 @@ function updateBookingBadges() {
   }
 
   const navBadge = $('#navBookingCount');
-  if (navBadge) navBadge.textContent = pendingCount;
+  if (navBadge) {
+    navBadge.textContent = pendingCount;
+    navBadge.classList.toggle('has-alert', pendingCount > 0);
+  }
 
   const panelBadge = $('#panelBookingCount');
   if (panelBadge) panelBadge.textContent = bookings.length;
@@ -808,8 +1187,8 @@ function handleBookingSubmit(e) {
     console.log('Netlify error:', err);
   }
 
-  // 2. Gửi đồng bộ lên Cloud Realtime Database (nếu có cấu hình)
-  syncBookingToCloud(newBooking);
+  // 2. Gửi đồng bộ lên Cloud Realtime ntfy & Telegram (đa máy tức thì 24/7)
+  broadcastBookingToCloud(newBooking);
 
   // Hiển thị màn hình thành công
   const form = $('#bookingForm');
@@ -1774,6 +2153,8 @@ function applyAdminState() {
     if (navAdminLoginBtn) navAdminLoginBtn.classList.add('hidden');
     if (navAdminAppointmentsBtn) navAdminAppointmentsBtn.classList.remove('hidden');
     if (navAdminLogoutBtn) navAdminLogoutBtn.classList.remove('hidden');
+    startCloudRealtimeStream();
+    fetchBookingsFromCloud(true);
   } else {
     document.body.classList.remove('is-admin');
     if (adminLoginBtn) adminLoginBtn.classList.remove('hidden');
@@ -1782,6 +2163,7 @@ function applyAdminState() {
     if (navAdminLoginBtn) navAdminLoginBtn.classList.remove('hidden');
     if (navAdminAppointmentsBtn) navAdminAppointmentsBtn.classList.add('hidden');
     if (navAdminLogoutBtn) navAdminLogoutBtn.classList.add('hidden');
+    stopCloudRealtimeStream();
   }
 
   updateBookingBadges();
@@ -2323,11 +2705,24 @@ function applyLanguage(lang, notify = false) {
 function init() {
   initLanguage();
   initAdminAuth();
+  initAppointmentsCloudUI();
   activeData = getAllPosts();
   renderCards(activeData);
   initSmartImporter();
   updateBookingBadges();
-  fetchBookingsFromCloud();
+
+  // Tải đồng bộ Cloud Realtime ngay khi mở web
+  fetchBookingsFromCloud(true);
+  if (isAdminLoggedIn()) {
+    startCloudRealtimeStream();
+  }
+
+  // Tự động kiểm tra và refresh lịch hẹn khi quay lại tab trình duyệt
+  window.addEventListener('focus', () => {
+    if (isAdminLoggedIn()) {
+      fetchBookingsFromCloud(true);
+    }
+  });
 
   // Tự động kiểm tra Apify theo chế độ tối ưu 24 giờ
   fetchApifyLive(false);
