@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thảo Anh Apartment – Căn Hộ Dịch Vụ Đà Lạt</title>
+  <link rel="stylesheet" href="style.css?v=8" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header class="header" id="header">
+    <div class="container header__inner">
+      <a href="#" class="logo">
+        <img src="logo.png" alt="Thảo Anh Apartment Logo" class="logo__img" />
+        <span class="logo__text">
+          <strong>THẢO ANH</strong>
+          <span class="logo__sub">APARTMENT</span>
+        </span>
+      </a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav" id="nav">
+        <a href="#listings" class="nav__link">Căn Hộ</a>
+        <a href="#branches" class="nav__link">4 Cơ Sở</a>
+        <a href="#about"    class="nav__link">Về Chúng Tôi</a>
+        <a href="#contact"  class="nav__link">Liên Hệ</a>
+      </nav>
+
+      <!-- Nút Đăng nhập Admin nằm góc bên phải -->
+      <div class="header__right">
+        <button class="btn btn--admin-login" id="adminLoginBtn">
+          🔐 Đăng nhập Admin
+        </button>
+        <div class="admin-logged-badge hidden" id="adminLoggedBadge">
+          <span>🛡️ Admin</span>
+          <button id="adminLogoutBtn" class="btn-logout" title="Đăng xuất">Thoát</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== HERO ========== -->
+  <section class="hero">
+    <div class="hero__overlay"></div>
+    <div class="hero__content">
+      <p class="hero__eyebrow">🌲 Thảo Anh Apartment – Căn Hộ Dịch Vụ Đà Lạt</p>
+      <h1 class="hero__title">Căn Hộ Dịch Vụ<br /><span class="highlight">Tiện Nghi & Ấm Cúng</span> Tại Đà Lạt</h1>
+      <p class="hero__subtitle">Hệ thống 4 cơ sở trung tâm TP. Đà Lạt (Phường 4 & Phường 8). Đầy đủ nội thất cao cấp, view đẹp, giá tốt chỉ từ 3.8 – 6 triệu/tháng.</p>
+
+      <!-- FILTER BAR (ĐÀ LẠT) -->
+      <div class="filter-bar" id="filterBar">
+        <div class="filter-group">
+          <label class="filter-label">Cơ sở / Khu vực</label>
+          <select class="filter-select" id="filterDistrict">
+            <option value="">Tất cả cơ sở tại Đà Lạt</option>
+            <option value="Ngô Thì Sỹ">CS1: 74D Ngô Thì Sỹ (P.4)</option>
+            <option value="61/18 Phù Đổng">CS2: 61/18 Phù Đổng Thiên Vương (P.8)</option>
+            <option value="Nguyễn Trung Trực">CS3: F2-C5 Nguyễn Trung Trực (P.4)</option>
+            <option value="61/7 Phù Đổng">CS4: 61/7 Phù Đổng Thiên Vương (P.8)</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Khoảng giá</label>
+          <select class="filter-select" id="filterPrice">
+            <option value="">Tất cả mức giá</option>
+            <option value="0-4">Dưới 4 triệu</option>
+            <option value="4-5">4 – 5 triệu (Phổ biến)</option>
+            <option value="5-7">5 – 7 triệu</option>
+            <option value="7+">Trên 7 triệu</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Loại phòng</label>
+          <select class="filter-select" id="filterRoom">
+            <option value="">Tất cả loại phòng</option>
+            <option value="1PN">1 Phòng ngủ (1PN)</option>
+            <option value="2PN">2 Phòng ngủ (2PN)</option>
+            <option value="Studio">Studio / Gác lửng</option>
+          </select>
+        </div>
+
+        <button class="btn filter-btn" id="applyFilter">
+          🔍 Tìm Kiếm
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== STATS ========== -->
+  <section class="stats">
+    <div class="container stats__grid">
+      <div class="stat-item">
+        <span class="stat-num">4</span>
+        <span class="stat-label">Cơ sở tại Đà Lạt</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">100%</span>
+        <span class="stat-label">Full nội thất cao cấp</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">3.800+</span>
+        <span class="stat-label">Người theo dõi Fanpage</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">98%</span>
+        <span class="stat-label">Khách hàng hài lòng</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== BRANCHES ========== -->
+  <section class="branches" id="branches">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge">Hệ Thống Cơ Sở</span>
+        <h2 class="section-title">4 Vị Trí Trung Tâm Tại TP. Đà Lạt</h2>
+        <p class="section-sub">Tọa lạc tại Phường 4 và Phường 8, không gian yên bình, an ninh và tiện di chuyển</p>
+      </div>
+
+      <div class="branches__grid">
+        <div class="branch-card">
+          <span class="branch-num">CƠ SỞ 1</span>
+          <h3 class="branch-title">Ngô Thì Sỹ</h3>
+          <p class="branch-address">📍 74D Ngô Thì Sỹ, Phường 4, TP. Đà Lạt, Lâm Đồng</p>
+          <span class="branch-tag">View đồi thoáng mát</span>
+        </div>
+        <div class="branch-card">
+          <span class="branch-num">CƠ SỞ 2</span>
+          <h3 class="branch-title">Phù Đổng Thiên Vương</h3>
+          <p class="branch-address">📍 61/18 Phù Đổng Thiên Vương, Phường 8, TP. Đà Lạt</p>
+          <span class="branch-tag">Gần ĐH Đà Lạt</span>
+        </div>
+        <div class="branch-card">
+          <span class="branch-num">CƠ SỞ 3</span>
+          <h3 class="branch-title">Nguyễn Trung Trực</h3>
+          <p class="branch-address">📍 F2-C5 Nguyễn Trung Trực, Phường 4, TP. Đà Lạt</p>
+          <span class="branch-tag">Yên tĩnh, an ninh cao</span>
+        </div>
+        <div class="branch-card">
+          <span class="branch-num">CƠ SỞ 4</span>
+          <h3 class="branch-title">Phù Đổng Thiên Vương</h3>
+          <p class="branch-address">📍 61/7 Phù Đổng Thiên Vương, Phường 8, TP. Đà Lạt</p>
+          <span class="branch-tag">Khuôn viên rộng rãi</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== LISTINGS ========== -->
+  <section class="listings" id="listings">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Danh Sách Căn Hộ Đang Cho Thuê</h2>
+        <p class="section-sub">Được cập nhật thường xuyên từ Fanpage Thảo Anh Apartment - Căn Hộ Đà Lạt</p>
+      </div>
+
+      <!-- SMART FACEBOOK IMPORTER PANEL (CHỈ HIỂN THỊ KHI ĐĂNG NHẬP ADMIN) -->
+      <div class="fb-smart-panel admin-only" id="fbSmartPanel">
+        <div class="fb-smart-left">
+          <div class="fb-smart-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02Z"/>
+            </svg>
+          </div>
+          <div class="fb-smart-info">
+            <div class="fb-smart-title-row">
+              <strong>Công Cụ Quản Trị: Đồng Bộ & Thêm Bài Viết Facebook</strong>
+              <span class="badge badge--fb">🛡️ Quyền Admin</span>
+              <span class="sync-badge" id="apifySyncStatus">⚡ Apify Live Connected</span>
+            </div>
+            <p>Hệ thống tự động liên kết với Apify Dataset: Lấy đầy đủ bài viết, hình ảnh nét và nội thất thực tế từ Fanpage Thảo Anh Apartment.</p>
+          </div>
+        </div>
+        <div class="fb-smart-actions">
+          <button class="btn btn--fb-import" id="btnSyncApify" title="Tải bài viết mới nhất từ Apify">
+            <span class="btn-icon">🔄</span> Đồng bộ Apify Live
+          </button>
+          <button class="btn btn--secondary btn--sm" id="openImportModalBtn">
+            <span>➕</span> Nhập thủ công
+          </button>
+          <button class="btn btn--secondary btn--sm hidden" id="clearUserPostsBtn" title="Xóa các bài tự thêm">
+            🗑️ Xóa bài đã thêm (<span id="userPostCount">0</span>)
+          </button>
+        </div>
+      </div>
+
+      <div class="result-count" id="resultCount"></div>
+
+      <div class="grid" id="listingGrid">
+        <!-- Cards rendered by JS -->
+      </div>
+
+      <div class="empty-state hidden" id="emptyState">
+        <div class="empty-icon">🏚️</div>
+        <h3>Không tìm thấy căn hộ phù hợp</h3>
+        <p>Thử thay đổi bộ lọc để xem thêm các cơ sở khác tại Đà Lạt nhé!</p>
+        <button class="btn" id="resetFilter">Xoá bộ lọc</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== ABOUT ========== -->
+  <section class="about" id="about">
+    <div class="container about__inner">
+      <div class="about__text">
+        <span class="badge">Về Thảo Anh Apartment</span>
+        <h2>Không gian sống<br /><span class="highlight">ấm cúng & tiện nghi</span> giữa lòng Đà Lạt</h2>
+        <p>Thảo Anh Apartment là chuỗi căn hộ dịch vụ uy tín tại TP. Đà Lạt với 4 cơ sở trung tâm. Cung cấp không gian nghỉ ngơi yên tĩnh, trang bị đầy đủ tiện nghi sinh hoạt cao cấp cho khách du lịch, làm việc hay định cư lâu dài.</p>
+        <ul class="about__list">
+          <li>✅ Đầy đủ nội thất chuẩn căn hộ dịch vụ (bếp, máy giặt, nóng lạnh...)</li>
+          <li>✅ Không gian ấm cúng, thoáng đãng, view đồi đặc trưng Đà Lạt</li>
+          <li>✅ An ninh 24/7, khóa cửa thông minh, giờ giấc tự do</li>
+          <li>✅ Hỗ trợ khách thuê tận tình, giá thuê trực tiếp không qua trung gian</li>
+        </ul>
+      </div>
+      <div class="about__image">
+        <img src="dalat-sample.png" alt="Căn hộ Thảo Anh Đà Lạt" loading="lazy" />
+        <div class="about__badge-float">
+          <span class="badge-float-icon">🌲</span>
+          <div>
+            <strong>Thảo Anh</strong>
+            <small>Căn Hộ Dịch Vụ Đà Lạt</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CONTACT ========== -->
+  <section class="contact" id="contact">
+    <div class="container contact__inner">
+      <h2 class="contact__title">Liên Hệ Đặt Phòng / Xem Nhà</h2>
+      <p class="contact__sub">Thảo Anh Apartment luôn sẵn sàng tư vấn và đón tiếp quý khách</p>
+      <div class="contact__btns">
+        <a href="https://m.me/thaoanhapartmentdalat" class="btn btn--messenger" target="_blank">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 4.975 0 11.111c0 3.497 1.745 6.616 4.472 8.652V24l4.086-2.242c1.09.301 2.246.464 3.442.464 6.627 0 12-4.975 12-11.111C24 4.975 18.627 0 12 0zm1.193 14.963l-3.056-3.259-5.963 3.259 6.559-6.963 3.13 3.259 5.889-3.259-6.559 6.963z"/></svg>
+          Nhắn Messenger
+        </a>
+        <a href="https://zalo.me/0901351815" class="btn btn--zalo" target="_blank">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+          Zalo: 090 135 18 15
+        </a>
+        <a href="tel:0903879393" class="btn btn--phone" target="_blank">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+          Hotline: 090 387 93 93
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <div class="footer__logo-wrap">
+          <img src="logo.png" alt="Logo Thảo Anh" class="logo__img" style="filter: brightness(0) invert(1);" />
+          <span class="logo__text" style="color:#fff">
+            <strong>THẢO ANH</strong>
+            <span class="logo__sub" style="color:var(--clr-gold)">APARTMENT</span>
+          </span>
+        </div>
+        <p>Căn hộ dịch vụ cao cấp, đầy đủ tiện nghi tại TP. Đà Lạt.</p>
+      </div>
+      <div class="footer__links">
+        <h4>Hệ thống 4 cơ sở</h4>
+        <a href="#branches">CS1: 74D Ngô Thì Sỹ, P.4</a>
+        <a href="#branches">CS2: 61/18 Phù Đổng Thiên Vương, P.8</a>
+        <a href="#branches">CS3: F2-C5 Nguyễn Trung Trực, P.4</a>
+        <a href="#branches">CS4: 61/7 Phù Đổng Thiên Vương, P.8</a>
+      </div>
+      <div class="footer__links">
+        <h4>Dịch vụ</h4>
+        <a href="#listings">Cho thuê theo tháng</a>
+        <a href="#listings">Cho thuê theo năm</a>
+        <a href="#about">Hợp đồng linh hoạt</a>
+      </div>
+      <div class="footer__links">
+        <h4>Liên hệ</h4>
+        <a href="tel:0903879393">📞 Hotline: 090 387 93 93</a>
+        <a href="https://zalo.me/0901351815">💬 Zalo: 090 135 18 15</a>
+        <a href="#">📍 TP. Đà Lạt, Lâm Đồng</a>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>© 2024 Thảo Anh Apartment - Căn Hộ Dịch Vụ Đà Lạt. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ========== MODAL CHI TIẾT CĂN HỘ ========== -->
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal" id="modal">
+      <button class="modal__close" id="modalClose" aria-label="Đóng">✕</button>
+
+      <div class="modal__gallery">
+        <img class="modal__img" id="modalImg" src="" alt="" loading="lazy" />
+        <span class="modal__badge" id="modalBadge"></span>
+      </div>
+      <!-- Album ảnh thu nhỏ -->
+      <div class="modal__thumbnails hidden" id="modalThumbnails"></div>
+
+      <div class="modal__body">
+        <div class="modal__price-row">
+          <span class="modal__price" id="modalPrice"></span>
+          <span class="modal__tag" id="modalTag"></span>
+        </div>
+        <h2 class="modal__title" id="modalTitle"></h2>
+        <p class="modal__address" id="modalAddress">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          <span id="modalAddressText"></span>
+        </p>
+
+        <div class="modal__specs" id="modalSpecs"></div>
+
+        <div class="modal__divider"></div>
+
+        <h3 class="modal__section-title">🛋️ Nội thất & Tiện nghi có sẵn</h3>
+        <div class="modal__amenities" id="modalAmenities"></div>
+
+        <div class="modal__divider"></div>
+
+        <h3 class="modal__section-title">📋 Mô tả chi tiết từ Thảo Anh Apartment</h3>
+        <div class="modal__description" id="modalDescription"></div>
+
+        <div class="modal__cta">
+          <a class="btn btn--fb-link btn--full hidden" id="modalFbPostLink" href="#" target="_blank">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02Z"/></svg>
+            Xem bài viết gốc trên Facebook ↗
+          </a>
+          <a class="btn btn--messenger btn--full" id="modalMessenger" href="https://m.me/thaoanhapartmentdalat" target="_blank">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 4.975 0 11.111c0 3.497 1.745 6.616 4.472 8.652V24l4.086-2.242c1.09.301 2.246.464 3.442.464 6.627 0 12-4.975 12-11.111C24 4.975 18.627 0 12 0zm1.193 14.963l-3.056-3.259-5.963 3.259 6.559-6.963 3.13 3.259 5.889-3.259-6.559 6.963z"/></svg>
+            Nhắn tin Messenger
+          </a>
+          <a class="btn btn--zalo btn--full" id="modalZalo" href="tel:0903879393" target="_blank">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+            Gọi / Zalo Thảo Anh: 090 387 93 93
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SMART IMPORT MODAL (ADMIN ONLY) ========== -->
+  <div class="modal-overlay" id="importModalOverlay" role="dialog" aria-modal="true" aria-labelledby="importModalTitle">
+    <div class="modal modal--import" id="importModal">
+      <div class="modal__header">
+        <div class="modal__header-title">
+          <span class="modal__icon-badge">⚡</span>
+          <div>
+            <h2 id="importModalTitle">Nhập Bài Viết Facebook Thông Minh</h2>
+            <p>Hệ thống tự động quét và bóc tách Giá, Cơ sở Đà Lạt, và Nội thất thực tế</p>
+          </div>
+        </div>
+        <button class="modal__close" id="importModalClose" aria-label="Đóng">✕</button>
+      </div>
+
+      <div class="import-form">
+        <!-- Bước 1: Dán Caption FB -->
+        <div class="form-section">
+          <div class="form-section__header">
+            <span class="step-num">1</span>
+            <div>
+              <h3>Nội dung bài viết (Caption Facebook)</h3>
+              <p>Copy toàn bộ bài viết từ Fanpage Thảo Anh Apartment dán vào đây</p>
+            </div>
+            <button type="button" class="btn btn--outline btn--sm" id="btnFillDemo">📋 Dán bài mẫu Thảo Anh</button>
+          </div>
+          <textarea id="importCaption" class="form-textarea" rows="5" placeholder="Dán nội dung bài viết Facebook vào đây...
+Hệ thống sẽ tự nhận diện Giá, Vị trí và danh sách Nội thất có trong bài viết!"></textarea>
+          <div class="parse-trigger-bar">
+            <button type="button" class="btn btn--sm btn--parse" id="btnAutoParse">
+              ✨ Bóc tách thông tin tự động
+            </button>
+            <span class="parse-hint" id="parseHint">Dán bài viết vào là hệ thống tự nhận diện ngay</span>
+          </div>
+        </div>
+
+        <!-- Bước 2: Link Ảnh & Video -->
+        <div class="form-section">
+          <div class="form-section__header">
+            <span class="step-num">2</span>
+            <div>
+              <h3>Hình ảnh & Video</h3>
+              <p>Chuột phải vào ảnh bài đăng trên FB → chọn <strong>"Sao chép địa chỉ hình ảnh"</strong></p>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group flex-2">
+              <label for="importImageUrl">Link hình ảnh (có thể dán nhiều link cách nhau bởi dấu phẩy)</label>
+              <input type="url" id="importImageUrl" class="form-input" placeholder="https://... dán link ảnh từ Facebook" />
+            </div>
+            <div class="form-group flex-1">
+              <label for="importVideoUrl">Link Video (nếu có)</label>
+              <input type="url" id="importVideoUrl" class="form-input" placeholder="Link video .mp4 (tuỳ chọn)" />
+            </div>
+          </div>
+          <div class="image-preview-box" id="imagePreviewBox">
+            <img id="imagePreviewImg" src="dalat-sample.png" alt="Preview ảnh" />
+            <span class="preview-badge">Xem trước ảnh bìa</span>
+          </div>
+        </div>
+
+        <!-- Bước 3: Thông tin bóc tách được & Nội thất -->
+        <div class="form-section">
+          <div class="form-section__header">
+            <span class="step-num">3</span>
+            <div>
+              <h3>Thông tin đã trích xuất & Nội thất thực tế</h3>
+              <p>Kiểm tra lại dữ liệu trước khi đăng lên website</p>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-3">
+              <label for="importTitle">Tiêu đề căn hộ *</label>
+              <input type="text" id="importTitle" class="form-input" placeholder="Tiêu đề căn hộ" />
+            </div>
+            <div class="form-group flex-1">
+              <label for="importTag">Nhãn (Tag)</label>
+              <input type="text" id="importTag" class="form-input" value="Thảo Anh" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="importPrice">Mức giá thuê (VNĐ/tháng) *</label>
+              <input type="text" id="importPrice" class="form-input" placeholder="Vd: 4.500.000" />
+            </div>
+            <div class="form-group flex-1">
+              <label for="importDistrict">Cơ sở tại Đà Lạt *</label>
+              <select id="importDistrict" class="form-select">
+                <option value="61/18 Phù Đổng">CS2: 61/18 Phù Đổng Thiên Vương (P.8)</option>
+                <option value="Ngô Thì Sỹ">CS1: 74D Ngô Thì Sỹ (P.4)</option>
+                <option value="Nguyễn Trung Trực">CS3: F2-C5 Nguyễn Trung Trực (P.4)</option>
+                <option value="61/7 Phù Đổng">CS4: 61/7 Phù Đổng Thiên Vương (P.8)</option>
+              </select>
+            </div>
+            <div class="form-group flex-1">
+              <label for="importRoom">Loại phòng</label>
+              <select id="importRoom" class="form-select">
+                <option value="2PN">2 Phòng ngủ (2PN)</option>
+                <option value="1PN">1 Phòng ngủ (1PN)</option>
+                <option value="Studio">Studio / Gác lửng</option>
+              </select>
+            </div>
+            <div class="form-group flex-1">
+              <label for="importArea">Diện tích</label>
+              <input type="text" id="importArea" class="form-input" placeholder="Vd: 45 m²" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="importAddress">Địa chỉ chi tiết *</label>
+            <input type="text" id="importAddress" class="form-input" placeholder="Địa chỉ cơ sở tại TP. Đà Lạt..." />
+          </div>
+
+          <!-- Khu vực nội thất nhận diện tự động từ bài viết -->
+          <div class="form-group">
+            <label>Nội thất & Tiện nghi nhận diện tự động từ bài viết:</label>
+            <div class="detected-furniture-box" id="detectedFurnitureBox">
+              <p class="furniture-empty-hint" id="furnitureEmptyHint">Dán nội dung bài viết ở Bước 1, hệ thống sẽ tự động quét và bóc tách các nội thất có trong bài...</p>
+              <div class="furniture-tags" id="furnitureTags"></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="importFurnitureInput">Thêm / Chỉnh sửa nội thất (cách nhau bởi dấu phẩy):</label>
+            <input type="text" id="importFurnitureInput" class="form-input" placeholder="Ví dụ: Sofa vàng, Giường nệm, Bếp điện, Bình nóng lạnh, Tủ lạnh, Máy giặt riêng, Ban công thoáng..." />
+          </div>
+        </div>
+
+        <div class="import-modal-footer">
+          <button type="button" class="btn btn--secondary" id="importModalCancel">Đóng</button>
+          <button type="button" class="btn btn--fb-submit" id="btnSubmitImport">
+            🚀 Đăng Lên Website Ngay
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== ADMIN LOGIN MODAL ========== -->
+  <div class="modal-overlay" id="adminModalOverlay" role="dialog" aria-modal="true" aria-labelledby="adminModalTitle">
+    <div class="modal modal--login" id="adminModal">
+      <button class="modal__close" id="adminModalClose" aria-label="Đóng">✕</button>
+      <div class="admin-login-icon">🔐</div>
+      <h2 id="adminModalTitle">Đăng Nhập Quản Trị</h2>
+      <p>Nhập mật khẩu để truy cập công cụ quản lý và đăng bài</p>
+      
+      <form id="adminLoginForm">
+        <div class="login-form-group">
+          <label for="adminPassword">Mật khẩu quản trị:</label>
+          <input type="password" id="adminPassword" class="form-input" placeholder="Nhập mật khẩu..." required />
+          <span class="login-hint">Mật khẩu mặc định: <strong>admin123</strong> (hoặc <strong>thaoanh</strong>)</span>
+        </div>
+        <button type="submit" class="btn btn--login-submit">Đăng Nhập Ngay</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ========== FLOATING BUTTONS (THẢO ANH APARTMENT) ========== -->
+  <div class="float-group" id="floatGroup">
+
+    <a href="https://zalo.me/0901351815" class="float-btn float-btn--zalo" target="_blank" aria-label="Zalo Thảo Anh">
+      <span class="float-btn__icon">
+        <svg width="22" height="22" viewBox="0 0 50 50" fill="currentColor"><path d="M25 3C12.85 3 3 12.85 3 25s9.85 22 22 22 22-9.85 22-22S37.15 3 25 3zm-4.15 30.6H16.1V20.15h4.75V33.6zm-2.38-15.25a2.75 2.75 0 110-5.5 2.75 2.75 0 010 5.5zM36.4 33.6h-4.72v-6.65c0-1.76-.63-2.95-2.19-2.95-1.2 0-1.91.8-2.22 1.58-.11.28-.14.66-.14 1.05v7h-4.72s.06-11.35 0-12.53H27v1.78c.63-.97 1.75-2.35 4.26-2.35 3.11 0 5.44 2.03 5.44 6.4V33.6z"/></svg>
+      </span>
+      <span class="float-btn__label">Zalo: 090 135 18 15</span>
+    </a>
+
+    <a href="https://m.me/thaoanhapartmentdalat" class="float-btn float-btn--messenger" target="_blank" aria-label="Messenger Thảo Anh">
+      <span class="float-btn__icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 4.975 0 11.111c0 3.497 1.745 6.616 4.472 8.652V24l4.086-2.242c1.09.301 2.246.464 3.442.464 6.627 0 12-4.975 12-11.111C24 4.975 18.627 0 12 0zm1.193 14.963l-3.056-3.259-5.963 3.259 6.559-6.963 3.13 3.259 5.889-3.259-6.559 6.963z"/></svg>
+      </span>
+      <span class="float-btn__label">Messenger</span>
+    </a>
+
+    <a href="tel:0903879393" class="float-btn float-btn--phone" aria-label="Hotline Thảo Anh">
+      <span class="float-btn__icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+      </span>
+      <span class="float-btn__label">090 387 93 93</span>
+    </a>
+
+  </div>
+
+  <script src="apify-data.js?v=1"></script>
+  <script src="app.js?v=9"></script>
+</body>
+</html>
