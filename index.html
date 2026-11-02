@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="no-referrer" />
   <title>Thảo Anh Apartment – Căn Hộ Dịch Vụ Đà Lạt</title>
-  <link rel="stylesheet" href="style.css?v=8" />
+  <link rel="stylesheet" href="style.css?v=19" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700;1,800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 </head>
 <body>
 
@@ -27,20 +28,84 @@
       </button>
 
       <nav class="nav" id="nav">
-        <a href="#listings" class="nav__link">Căn Hộ</a>
-        <a href="#branches" class="nav__link">4 Cơ Sở</a>
-        <a href="#about"    class="nav__link">Về Chúng Tôi</a>
-        <a href="#contact"  class="nav__link">Liên Hệ</a>
+        <!-- Chuyển đổi ngôn ngữ trên Menu di động -->
+        <div class="nav__mobile-section nav__mobile-only">
+          <div class="nav__lang-box">
+            <span class="nav__lang-title">🌐 <span data-i18n="lang_label">Ngôn ngữ</span>:</span>
+            <div class="lang-switch lang-switch--nav" id="navLangSwitch" role="group" aria-label="Ngôn ngữ">
+              <button type="button" class="lang-switch__btn active" data-lang="vi" title="Tiếng Việt">
+                <span class="lang-switch__code">Tiếng Việt</span>
+              </button>
+              <button type="button" class="lang-switch__btn" data-lang="en" title="English">
+                <span class="lang-switch__code">English</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <a href="#listings" class="nav__link" data-i18n="nav_listings">Căn Hộ</a>
+        <a href="#branches" class="nav__link" data-i18n="nav_branches">4 Cơ Sở</a>
+        <a href="#about"    class="nav__link" data-i18n="nav_about">Về Chúng Tôi</a>
+        <a href="#contact"  class="nav__link" data-i18n="nav_contact">Liên Hệ</a>
+
+        <!-- Nút đặt lịch xem phòng nổi bật trên Menu di động -->
+        <div class="nav__mobile-section nav__mobile-only">
+          <button type="button" class="btn btn--nav-book" id="navBookingBtn">
+            <svg class="svg-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V9h14v10zm0-12H5V5h14v2zM7 11h5v5H7z"/>
+            </svg>
+            <span data-i18n="header_book">Đặt Lịch Xem Phòng</span>
+          </button>
+        </div>
+
+        <div class="nav__divider-mobile nav__mobile-only"></div>
+        <button type="button" class="nav__link nav__link--admin nav__mobile-only" id="navAdminLoginBtn">
+          <span>🛡️</span> <strong data-i18n="nav_admin_login">Đăng Nhập Quản Trị (Admin)</strong>
+        </button>
+        <button type="button" class="nav__link nav__link--appointments hidden nav__mobile-only" id="navAdminAppointmentsBtn">
+          <span>📅</span> <span data-i18n="nav_appointments">Lịch Hẹn Khách Đặt</span> (<strong id="navBookingCount">0</strong>)
+        </button>
+        <button type="button" class="nav__link nav__link--logout hidden nav__mobile-only" id="navAdminLogoutBtn">
+          <span>🚪</span> <span data-i18n="nav_logout">Đăng Xuất Admin</span>
+        </button>
       </nav>
 
-      <!-- Nút Đăng nhập Admin nằm góc bên phải -->
+      <!-- Các nút chức năng Header (Phong cách Liquid Glass) -->
       <div class="header__right">
-        <button class="btn btn--admin-login" id="adminLoginBtn">
-          🔐 Đăng nhập Admin
+        <!-- Chuyển đổi ngôn ngữ VI / EN -->
+        <div class="lang-switch" id="langSwitch" role="group" aria-label="Ngôn ngữ / Language">
+          <button type="button" class="lang-switch__btn active" data-lang="vi" title="Tiếng Việt">
+            <span class="lang-switch__code">VI</span>
+          </button>
+          <button type="button" class="lang-switch__btn" data-lang="en" title="English">
+            <span class="lang-switch__code">EN</span>
+          </button>
+        </div>
+
+        <button class="btn btn--header-book liquid-btn" id="headerBookingBtn" title="Đặt lịch xem căn hộ hoặc đặt giữ phòng">
+          <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+            <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V9h14v10zm0-12H5V5h14v2zM7 11h5v5H7z"/>
+          </svg>
+          <span data-i18n="header_book">Đặt Lịch Xem Phòng</span>
         </button>
+
+        <button class="btn btn--admin-login liquid-btn" id="adminLoginBtn" title="Đăng nhập dành cho Quản trị viên">
+          <svg class="svg-icon" viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+          </svg>
+          <span data-i18n="header_admin">Admin</span>
+        </button>
+
         <div class="admin-logged-badge hidden" id="adminLoggedBadge">
-          <span>🛡️ Admin</span>
-          <button id="adminLogoutBtn" class="btn-logout" title="Đăng xuất">Thoát</button>
+          <button class="btn-admin-appointments liquid-btn" id="headerAppointmentsBtn" title="Xem danh sách khách hẹn xem phòng">
+            <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+              <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/>
+            </svg>
+            <span data-i18n="admin_appointments">Lịch hẹn</span>
+            <span class="badge-count" id="headerBookingCount">0</span>
+          </button>
+          <span class="admin-chip">🛡️ Admin</span>
+          <button id="adminLogoutBtn" class="btn-logout" title="Đăng xuất" data-i18n="admin_logout">Thoát</button>
         </div>
       </div>
     </div>
@@ -50,16 +115,31 @@
   <section class="hero">
     <div class="hero__overlay"></div>
     <div class="hero__content">
-      <p class="hero__eyebrow">🌲 Thảo Anh Apartment – Căn Hộ Dịch Vụ Đà Lạt</p>
-      <h1 class="hero__title">Căn Hộ Dịch Vụ<br /><span class="highlight">Tiện Nghi & Ấm Cúng</span> Tại Đà Lạt</h1>
-      <p class="hero__subtitle">Hệ thống 4 cơ sở trung tâm TP. Đà Lạt (Phường 4 & Phường 8). Đầy đủ nội thất cao cấp, view đẹp, giá tốt chỉ từ 3.8 – 6 triệu/tháng.</p>
+      <p class="hero__eyebrow">
+        <span class="eyebrow-dot"></span>
+        <span data-i18n="hero_eyebrow">Thảo Anh Apartment • Căn Hộ Dịch Vụ Đà Lạt</span>
+      </p>
+      <h1 class="hero__title">
+        <span class="hero__title-sub" data-i18n="hero_title_sub">Căn Hộ Dịch Vụ</span>
+        <span class="hero__title-artistic" data-i18n="hero_title_artistic">Tiện Nghi &amp; Ấm Cúng</span>
+        <span class="hero__title-loc">
+          <span class="loc-prefix" data-i18n="hero_loc_prefix">Tại</span>
+          <span class="dalat-brush-wrap">
+            <span class="dalat-script">Đà Lạt</span>
+            <svg class="dalat-swoosh" viewBox="0 0 240 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 12C35 4 105 2 175 5C205 7 230 10 238 12C200 9 135 5 70 7C35 8 14 11 4 12Z" fill="#FDB827"/>
+            </svg>
+          </span>
+        </span>
+      </h1>
+      <p class="hero__subtitle" data-i18n="hero_subtitle">Hệ thống 4 cơ sở trung tâm TP. Đà Lạt (Phường 4 &amp; Phường 8). Đầy đủ nội thất cao cấp, view ngắm trọn phố sương mù lấp lánh về đêm, giá tốt chỉ từ 3.2 – 6 triệu/tháng.</p>
 
       <!-- FILTER BAR (ĐÀ LẠT) -->
       <div class="filter-bar" id="filterBar">
         <div class="filter-group">
-          <label class="filter-label">Cơ sở / Khu vực</label>
+          <label class="filter-label" data-i18n="filter_loc_label">Cơ sở / Khu vực</label>
           <select class="filter-select" id="filterDistrict">
-            <option value="">Tất cả cơ sở tại Đà Lạt</option>
+            <option value="" data-i18n="filter_loc_all">Tất cả cơ sở tại Đà Lạt</option>
             <option value="Ngô Thì Sỹ">CS1: 74D Ngô Thì Sỹ (P.4)</option>
             <option value="61/18 Phù Đổng">CS2: 61/18 Phù Đổng Thiên Vương (P.8)</option>
             <option value="Nguyễn Trung Trực">CS3: F2-C5 Nguyễn Trung Trực (P.4)</option>
@@ -68,28 +148,28 @@
         </div>
 
         <div class="filter-group">
-          <label class="filter-label">Khoảng giá</label>
+          <label class="filter-label" data-i18n="filter_price_label">Khoảng giá</label>
           <select class="filter-select" id="filterPrice">
-            <option value="">Tất cả mức giá</option>
-            <option value="0-4">Dưới 4 triệu</option>
-            <option value="4-5">4 – 5 triệu (Phổ biến)</option>
-            <option value="5-7">5 – 7 triệu</option>
-            <option value="7+">Trên 7 triệu</option>
+            <option value="" data-i18n="filter_price_all">Tất cả mức giá</option>
+            <option value="0-4" data-i18n="filter_price_u4">Dưới 4 triệu</option>
+            <option value="4-5" data-i18n="filter_price_45">4 – 5 triệu (Phổ biến)</option>
+            <option value="5-7" data-i18n="filter_price_57">5 – 7 triệu</option>
+            <option value="7+" data-i18n="filter_price_o7">Trên 7 triệu</option>
           </select>
         </div>
 
         <div class="filter-group">
-          <label class="filter-label">Loại phòng</label>
+          <label class="filter-label" data-i18n="filter_room_label">Loại phòng</label>
           <select class="filter-select" id="filterRoom">
-            <option value="">Tất cả loại phòng</option>
-            <option value="1PN">1 Phòng ngủ (1PN)</option>
-            <option value="2PN">2 Phòng ngủ (2PN)</option>
-            <option value="Studio">Studio / Gác lửng</option>
+            <option value="" data-i18n="filter_room_all">Tất cả loại phòng</option>
+            <option value="1PN" data-i18n="filter_room_1pn">1 Phòng ngủ (1PN)</option>
+            <option value="2PN" data-i18n="filter_room_2pn">2 Phòng ngủ (2PN)</option>
+            <option value="Studio" data-i18n="filter_room_studio">Studio / Gác lửng</option>
           </select>
         </div>
 
         <button class="btn filter-btn" id="applyFilter">
-          🔍 Tìm Kiếm
+          <span data-i18n="filter_btn">🔍 Tìm Kiếm</span>
         </button>
       </div>
     </div>
@@ -100,19 +180,19 @@
     <div class="container stats__grid">
       <div class="stat-item">
         <span class="stat-num">4</span>
-        <span class="stat-label">Cơ sở tại Đà Lạt</span>
+        <span class="stat-label" data-i18n="stat_branches">Cơ sở tại Đà Lạt</span>
       </div>
       <div class="stat-item">
         <span class="stat-num">100%</span>
-        <span class="stat-label">Full nội thất cao cấp</span>
+        <span class="stat-label" data-i18n="stat_furniture">Full nội thất cao cấp</span>
       </div>
       <div class="stat-item">
         <span class="stat-num">3.800+</span>
-        <span class="stat-label">Người theo dõi Fanpage</span>
+        <span class="stat-label" data-i18n="stat_followers">Người theo dõi Fanpage</span>
       </div>
       <div class="stat-item">
         <span class="stat-num">98%</span>
-        <span class="stat-label">Khách hàng hài lòng</span>
+        <span class="stat-label" data-i18n="stat_satisfaction">Khách hàng hài lòng</span>
       </div>
     </div>
   </section>
@@ -121,35 +201,35 @@
   <section class="branches" id="branches">
     <div class="container">
       <div class="section-header">
-        <span class="badge">Hệ Thống Cơ Sở</span>
-        <h2 class="section-title">4 Vị Trí Trung Tâm Tại TP. Đà Lạt</h2>
-        <p class="section-sub">Tọa lạc tại Phường 4 và Phường 8, không gian yên bình, an ninh và tiện di chuyển</p>
+        <span class="badge" data-i18n="branches_badge">Hệ Thống Cơ Sở</span>
+        <h2 class="section-title" data-i18n="branches_title">4 Vị Trí Trung Tâm Tại TP. Đà Lạt</h2>
+        <p class="section-sub" data-i18n="branches_sub">Tọa lạc tại Phường 4 và Phường 8, không gian yên bình, an ninh và tiện di chuyển</p>
       </div>
 
       <div class="branches__grid">
         <div class="branch-card">
-          <span class="branch-num">CƠ SỞ 1</span>
+          <span class="branch-num" data-i18n="branch1_num">CƠ SỞ 1</span>
           <h3 class="branch-title">Ngô Thì Sỹ</h3>
           <p class="branch-address">📍 74D Ngô Thì Sỹ, Phường 4, TP. Đà Lạt, Lâm Đồng</p>
-          <span class="branch-tag">View đồi thoáng mát</span>
+          <span class="branch-tag" data-i18n="branch1_tag">View đồi thoáng mát</span>
         </div>
         <div class="branch-card">
-          <span class="branch-num">CƠ SỞ 2</span>
+          <span class="branch-num" data-i18n="branch2_num">CƠ SỞ 2</span>
           <h3 class="branch-title">Phù Đổng Thiên Vương</h3>
           <p class="branch-address">📍 61/18 Phù Đổng Thiên Vương, Phường 8, TP. Đà Lạt</p>
-          <span class="branch-tag">Gần ĐH Đà Lạt</span>
+          <span class="branch-tag" data-i18n="branch2_tag">Gần ĐH Đà Lạt</span>
         </div>
         <div class="branch-card">
-          <span class="branch-num">CƠ SỞ 3</span>
+          <span class="branch-num" data-i18n="branch3_num">CƠ SỞ 3</span>
           <h3 class="branch-title">Nguyễn Trung Trực</h3>
           <p class="branch-address">📍 F2-C5 Nguyễn Trung Trực, Phường 4, TP. Đà Lạt</p>
-          <span class="branch-tag">Yên tĩnh, an ninh cao</span>
+          <span class="branch-tag" data-i18n="branch3_tag">Yên tĩnh, an ninh cao</span>
         </div>
         <div class="branch-card">
-          <span class="branch-num">CƠ SỞ 4</span>
+          <span class="branch-num" data-i18n="branch4_num">CƠ SỞ 4</span>
           <h3 class="branch-title">Phù Đổng Thiên Vương</h3>
           <p class="branch-address">📍 61/7 Phù Đổng Thiên Vương, Phường 8, TP. Đà Lạt</p>
-          <span class="branch-tag">Khuôn viên rộng rãi</span>
+          <span class="branch-tag" data-i18n="branch4_tag">Khuôn viên rộng rãi</span>
         </div>
       </div>
     </div>
@@ -159,8 +239,8 @@
   <section class="listings" id="listings">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title">Danh Sách Căn Hộ Đang Cho Thuê</h2>
-        <p class="section-sub">Được cập nhật thường xuyên từ Fanpage Thảo Anh Apartment - Căn Hộ Đà Lạt</p>
+        <h2 class="section-title" data-i18n="listings_title">Danh Sách Căn Hộ Đang Cho Thuê</h2>
+        <p class="section-sub" data-i18n="listings_sub">Được cập nhật thường xuyên từ Fanpage Thảo Anh Apartment - Căn Hộ Đà Lạt</p>
       </div>
 
       <!-- SMART FACEBOOK IMPORTER PANEL (CHỈ HIỂN THỊ KHI ĐĂNG NHẬP ADMIN) -->
@@ -173,22 +253,28 @@
           </div>
           <div class="fb-smart-info">
             <div class="fb-smart-title-row">
-              <strong>Công Cụ Quản Trị: Đồng Bộ & Thêm Bài Viết Facebook</strong>
+              <strong data-i18n="admin_panel_title">Bảng Điều Khiển Quản Trị Viên</strong>
               <span class="badge badge--fb">🛡️ Quyền Admin</span>
               <span class="sync-badge" id="apifySyncStatus">⚡ Apify Live Connected</span>
             </div>
-            <p>Hệ thống tự động liên kết với Apify Dataset: Lấy đầy đủ bài viết, hình ảnh nét và nội thất thực tế từ Fanpage Thảo Anh Apartment.</p>
+            <p id="apifySyncDesc">Tự động liên kết Apify Actor: Chế độ tối ưu cập nhật 24h/lần để tiết kiệm giới hạn miễn phí.</p>
           </div>
         </div>
         <div class="fb-smart-actions">
-          <button class="btn btn--fb-import" id="btnSyncApify" title="Tải bài viết mới nhất từ Apify">
-            <span class="btn-icon">🔄</span> Đồng bộ Apify Live
+          <button class="btn btn--fb-appointments" id="btnOpenAppointmentsPanel" title="Xem danh sách khách hàng đặt lịch hẹn">
+            <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+              <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V9h14v10zm0-12H5V5h14v2zM7 11h5v5H7z"/>
+            </svg>
+            <span><span data-i18n="admin_manage_btn">Quản Lý Lịch Hẹn</span> (<span id="panelBookingCount">0</span>)</span>
+          </button>
+          <button class="btn btn--fb-import" id="btnSyncApify" title="Cập nhật bài viết mới nhất từ Apify Actor Task">
+            <span class="btn-icon">🔄</span> <span data-i18n="admin_sync_btn">Đồng bộ Apify (Bỏ qua 24h)</span>
           </button>
           <button class="btn btn--secondary btn--sm" id="openImportModalBtn">
-            <span>➕</span> Nhập thủ công
+            <span>➕</span> <span data-i18n="admin_add_post">Thêm bài mới</span>
           </button>
           <button class="btn btn--secondary btn--sm hidden" id="clearUserPostsBtn" title="Xóa các bài tự thêm">
-            🗑️ Xóa bài đã thêm (<span id="userPostCount">0</span>)
+            🗑️ Xóa bài tự thêm (<span id="userPostCount">0</span>)
           </button>
         </div>
       </div>
@@ -201,9 +287,9 @@
 
       <div class="empty-state hidden" id="emptyState">
         <div class="empty-icon">🏚️</div>
-        <h3>Không tìm thấy căn hộ phù hợp</h3>
-        <p>Thử thay đổi bộ lọc để xem thêm các cơ sở khác tại Đà Lạt nhé!</p>
-        <button class="btn" id="resetFilter">Xoá bộ lọc</button>
+        <h3 data-i18n="empty_title">Không tìm thấy căn hộ phù hợp</h3>
+        <p data-i18n="empty_desc">Thử thay đổi bộ lọc để xem thêm các cơ sở khác tại Đà Lạt nhé!</p>
+        <button class="btn" id="resetFilter" data-i18n="empty_reset">Xoá bộ lọc</button>
       </div>
     </div>
   </section>
@@ -212,23 +298,23 @@
   <section class="about" id="about">
     <div class="container about__inner">
       <div class="about__text">
-        <span class="badge">Về Thảo Anh Apartment</span>
-        <h2>Không gian sống<br /><span class="highlight">ấm cúng & tiện nghi</span> giữa lòng Đà Lạt</h2>
-        <p>Thảo Anh Apartment là chuỗi căn hộ dịch vụ uy tín tại TP. Đà Lạt với 4 cơ sở trung tâm. Cung cấp không gian nghỉ ngơi yên tĩnh, trang bị đầy đủ tiện nghi sinh hoạt cao cấp cho khách du lịch, làm việc hay định cư lâu dài.</p>
+        <span class="badge" data-i18n="about_badge">Về Thảo Anh Apartment</span>
+        <h2 data-i18n="about_title">Không gian sống<br /><span class="highlight">ấm cúng & tiện nghi</span> giữa lòng Đà Lạt</h2>
+        <p data-i18n="about_desc">Thảo Anh Apartment là chuỗi căn hộ dịch vụ uy tín tại TP. Đà Lạt với 4 cơ sở trung tâm. Cung cấp không gian nghỉ ngơi yên tĩnh, trang bị đầy đủ tiện nghi sinh hoạt cao cấp cho khách du lịch, làm việc hay định cư lâu dài.</p>
         <ul class="about__list">
-          <li>✅ Đầy đủ nội thất chuẩn căn hộ dịch vụ (bếp, máy giặt, nóng lạnh...)</li>
-          <li>✅ Không gian ấm cúng, thoáng đãng, view đồi đặc trưng Đà Lạt</li>
-          <li>✅ An ninh 24/7, khóa cửa thông minh, giờ giấc tự do</li>
-          <li>✅ Hỗ trợ khách thuê tận tình, giá thuê trực tiếp không qua trung gian</li>
+          <li data-i18n="about_item1">✅ Đầy đủ nội thất chuẩn căn hộ dịch vụ (bếp, máy giặt, nóng lạnh...)</li>
+          <li data-i18n="about_item2">✅ Không gian ấm cúng, thoáng đãng, view đồi đặc trưng Đà Lạt</li>
+          <li data-i18n="about_item3">✅ An ninh 24/7, khóa cửa thông minh, giờ giấc tự do</li>
+          <li data-i18n="about_item4">✅ Hỗ trợ khách thuê tận tình, giá thuê trực tiếp không qua trung gian</li>
         </ul>
       </div>
       <div class="about__image">
-        <img src="dalat-sample.png" alt="Căn hộ Thảo Anh Đà Lạt" loading="lazy" />
+        <img src="fanpage.png" alt="Fanpage Thảo Anh Apartment - Căn Hộ Dịch Vụ Đà Lạt" loading="lazy" />
         <div class="about__badge-float">
           <span class="badge-float-icon">🌲</span>
           <div>
             <strong>Thảo Anh</strong>
-            <small>Căn Hộ Dịch Vụ Đà Lạt</small>
+            <small data-i18n="about_badge_sub">Căn Hộ Dịch Vụ Đà Lạt</small>
           </div>
         </div>
       </div>
@@ -238,20 +324,15 @@
   <!-- ========== CONTACT ========== -->
   <section class="contact" id="contact">
     <div class="container contact__inner">
-      <h2 class="contact__title">Liên Hệ Đặt Phòng / Xem Nhà</h2>
-      <p class="contact__sub">Thảo Anh Apartment luôn sẵn sàng tư vấn và đón tiếp quý khách</p>
+      <h2 class="contact__title" data-i18n="contact_title">Liên Hệ Đặt Phòng / Xem Nhà</h2>
+      <p class="contact__sub" data-i18n="contact_sub">Thảo Anh Apartment luôn sẵn sàng tư vấn và đón tiếp quý khách</p>
       <div class="contact__btns">
-        <a href="https://m.me/thaoanhapartmentdalat" class="btn btn--messenger" target="_blank">
+        <a href="tel:0559521514" class="btn btn--phone" target="_blank">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 4.975 0 11.111c0 3.497 1.745 6.616 4.472 8.652V24l4.086-2.242c1.09.301 2.246.464 3.442.464 6.627 0 12-4.975 12-11.111C24 4.975 18.627 0 12 0zm1.193 14.963l-3.056-3.259-5.963 3.259 6.559-6.963 3.13 3.259 5.889-3.259-6.559 6.963z"/></svg>
-          Nhắn Messenger
-        </a>
-        <a href="https://zalo.me/0901351815" class="btn btn--zalo" target="_blank">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
-          Zalo: 090 135 18 15
-        </a>
+          <span>Hotline: 055 952 15 14 (Phương)</span>
         <a href="tel:0903879393" class="btn btn--phone" target="_blank">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-          Hotline: 090 387 93 93
+          <span>Hotline: 090 387 93 93 (Thảo)</span>
         </a>
       </div>
     </div>
@@ -268,46 +349,66 @@
             <span class="logo__sub" style="color:var(--clr-gold)">APARTMENT</span>
           </span>
         </div>
-        <p>Căn hộ dịch vụ cao cấp, đầy đủ tiện nghi tại TP. Đà Lạt.</p>
+        <p data-i18n="footer_desc">Căn hộ dịch vụ cao cấp, đầy đủ tiện nghi tại TP. Đà Lạt.</p>
       </div>
       <div class="footer__links">
-        <h4>Hệ thống 4 cơ sở</h4>
+        <h4 data-i18n="footer_branches">Hệ thống 4 cơ sở</h4>
         <a href="#branches">CS1: 74D Ngô Thì Sỹ, P.4</a>
         <a href="#branches">CS2: 61/18 Phù Đổng Thiên Vương, P.8</a>
         <a href="#branches">CS3: F2-C5 Nguyễn Trung Trực, P.4</a>
         <a href="#branches">CS4: 61/7 Phù Đổng Thiên Vương, P.8</a>
       </div>
       <div class="footer__links">
-        <h4>Dịch vụ</h4>
-        <a href="#listings">Cho thuê theo tháng</a>
-        <a href="#listings">Cho thuê theo năm</a>
-        <a href="#about">Hợp đồng linh hoạt</a>
+        <h4 data-i18n="footer_services">Dịch vụ</h4>
+        <a href="#listings" data-i18n="footer_svc1">Cho thuê theo tháng</a>
+        <a href="#listings" data-i18n="footer_svc2">Cho thuê theo năm</a>
+        <a href="#about" data-i18n="footer_svc3">Hợp đồng linh hoạt</a>
       </div>
       <div class="footer__links">
-        <h4>Liên hệ</h4>
-        <a href="tel:0903879393">📞 Hotline: 090 387 93 93</a>
-        <a href="https://zalo.me/0901351815">💬 Zalo: 090 135 18 15</a>
+        <h4 data-i18n="footer_contact">Liên hệ</h4>
+        <a href="tel:0903879393">📞 Hotline: 090 387 93 93 (CÔ THẢO)</a>
+	<a href="tel:0559521514">📞 Hotline: 055 952 15 14 (CÔ PHƯƠNG)</a>
         <a href="#">📍 TP. Đà Lạt, Lâm Đồng</a>
       </div>
     </div>
     <div class="footer__bottom">
-      <p>© 2024 Thảo Anh Apartment - Căn Hộ Dịch Vụ Đà Lạt. All rights reserved.</p>
+      <p data-i18n="footer_copy">© 2024 Thảo Anh Apartment - Căn Hộ Dịch Vụ Đà Lạt. All rights reserved.</p>
     </div>
   </footer>
 
-  <!-- ========== MODAL CHI TIẾT CĂN HỘ ========== -->
+  <!-- ========== MODAL CHI TIẾT CĂN HỘ (GIAO DIỆN CHUẨN ĐẸP NHẤT, ĐẦY ĐỦ ẢNH & THÔNG TIN) ========== -->
   <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal" id="modal">
       <button class="modal__close" id="modalClose" aria-label="Đóng">✕</button>
 
-      <div class="modal__gallery">
-        <img class="modal__img" id="modalImg" src="" alt="" loading="lazy" />
-        <span class="modal__badge" id="modalBadge"></span>
-      </div>
-      <!-- Album ảnh thu nhỏ -->
-      <div class="modal__thumbnails hidden" id="modalThumbnails"></div>
+      <!-- KHUNG ẢNH LỚN & THUMBNAILS (TRÊN CÙNG CỦA MODAL) -->
+      <div class="modal__media-col" id="modalMediaCol">
+        <div class="modal__gallery" id="modalGallery">
+          <img class="modal__img" id="modalImg" src="" alt="Ảnh phòng" loading="lazy" referrerpolicy="no-referrer" />
+          <span class="modal__badge" id="modalBadge">THẢO ANH</span>
+          
+          <!-- Nút bấm phóng to ảnh nét -->
+          <button type="button" class="modal__zoom-btn" id="modalZoomBtn" title="Bấm để xem ảnh phóng to siêu nét toàn màn hình">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zm.5-7H9v2H7v1h2v2h1v-2h2V9h-2z"/></svg>
+            <span data-i18n="modal_zoom_btn">Phóng to xem nét</span>
+          </button>
 
-      <div class="modal__body">
+          <!-- Nút chuyển ảnh Trước / Kế -->
+          <button type="button" class="modal__nav-btn modal__nav-btn--prev" id="modalImgPrev" aria-label="Xem ảnh trước">‹</button>
+          <button type="button" class="modal__nav-btn modal__nav-btn--next" id="modalImgNext" aria-label="Xem ảnh tiếp theo">›</button>
+
+          <!-- Huy hiệu số thứ tự ảnh -->
+          <div class="modal__img-counter" id="modalImgCounter">1 / 1</div>
+        </div>
+
+        <!-- Album ảnh thu nhỏ (Thumbnails) -->
+        <div class="modal__thumbnails-wrap">
+          <div class="modal__thumbnails hidden" id="modalThumbnails"></div>
+        </div>
+      </div>
+
+      <!-- THÔNG TIN CHI TIẾT CĂN HỘ & NÚT ĐẶT LỊCH / LIÊN HỆ -->
+      <div class="modal__body" id="modalBody">
         <div class="modal__price-row">
           <span class="modal__price" id="modalPrice"></span>
           <span class="modal__tag" id="modalTag"></span>
@@ -318,33 +419,67 @@
           <span id="modalAddressText"></span>
         </p>
 
+        <!-- Nút nhanh xem album ảnh -->
+        <div class="modal__photo-quickbar">
+          <button type="button" class="btn btn--photo-view-quick" id="modalViewPhotosBtn">
+            📷 <span id="modalPhotoCountLabel">Xem toàn bộ ảnh phòng</span>
+          </button>
+        </div>
+
         <div class="modal__specs" id="modalSpecs"></div>
 
         <div class="modal__divider"></div>
 
-        <h3 class="modal__section-title">🛋️ Nội thất & Tiện nghi có sẵn</h3>
+        <h3 class="modal__section-title" data-i18n="modal_amenities_title">🛋️ Nội thất &amp; Tiện nghi có sẵn</h3>
         <div class="modal__amenities" id="modalAmenities"></div>
 
         <div class="modal__divider"></div>
 
-        <h3 class="modal__section-title">📋 Mô tả chi tiết từ Thảo Anh Apartment</h3>
+        <h3 class="modal__section-title" data-i18n="modal_desc_title">📋 Mô tả chi tiết từ Thảo Anh Apartment</h3>
         <div class="modal__description" id="modalDescription"></div>
 
+        <!-- CÁC NÚT ĐẶT LỊCH & LIÊN HỆ: XUỐNG DÒNG 100% ĐẦY ĐỦ NỘI DUNG, KHÔNG BỊ CẮT CHỮ -->
         <div class="modal__cta">
+          <button class="btn btn--modal-book btn--full" id="modalBookNowBtn">
+            <svg class="svg-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V9h14v10zm0-12H5V5h14v2zM7 11h5v5H7z"/>
+            </svg>
+            <span data-i18n="modal_book_btn">📅 Đặt Lịch Hẹn Xem Phòng Này</span>
+          </button>
+          <button class="btn btn--modal-edit btn--full admin-only hidden" id="modalEditPostBtn">
+            <svg class="svg-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+              <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+            </svg>
+            <span data-i18n="modal_edit_btn">✏️ Chỉnh Sửa Bài Viết Này (Admin)</span>
+          </button>
           <a class="btn btn--fb-link btn--full hidden" id="modalFbPostLink" href="#" target="_blank">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02Z"/></svg>
-            Xem bài viết gốc trên Facebook ↗
+            <span data-i18n="modal_fb_link">Xem bài viết gốc trên Facebook ↗</span>
           </a>
-          <a class="btn btn--messenger btn--full" id="modalMessenger" href="https://m.me/thaoanhapartmentdalat" target="_blank">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 4.975 0 11.111c0 3.497 1.745 6.616 4.472 8.652V24l4.086-2.242c1.09.301 2.246.464 3.442.464 6.627 0 12-4.975 12-11.111C24 4.975 18.627 0 12 0zm1.193 14.963l-3.056-3.259-5.963 3.259 6.559-6.963 3.13 3.259 5.889-3.259-6.559 6.963z"/></svg>
-            Nhắn tin Messenger
+          <a class="btn btn--messenger btn--full" id="modalMessenger" href="tel:0559521514" target="_blank">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+            <span data-i18n="btn_msg">055 952 15 14 (Phương)</span>
           </a>
           <a class="btn btn--zalo btn--full" id="modalZalo" href="tel:0903879393" target="_blank">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
-            Gọi / Zalo Thảo Anh: 090 387 93 93
+            <span> 090 387 93 93 (Thảo)</span>
           </a>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- ========== FULLSCREEN IMAGE LIGHTBOX (PHÓNG TO ẢNH SIÊU NÉT) ========== -->
+  <div class="lightbox-overlay" id="lightboxModal" role="dialog" aria-modal="true" aria-label="Xem ảnh phóng to">
+    <button type="button" class="lightbox__close" id="lightboxClose" aria-label="Đóng phóng to">✕</button>
+    <div class="lightbox__content">
+      <img class="lightbox__img" id="lightboxImg" src="" alt="Ảnh phòng phóng to" referrerpolicy="no-referrer" />
+    </div>
+    <button type="button" class="lightbox__nav-btn lightbox__nav-btn--prev" id="lightboxPrev" aria-label="Ảnh trước">‹</button>
+    <button type="button" class="lightbox__nav-btn lightbox__nav-btn--next" id="lightboxNext" aria-label="Ảnh tiếp theo">›</button>
+    <div class="lightbox__toolbar">
+      <span class="lightbox__counter" id="lightboxCounter">1 / 1</span>
+      <span class="lightbox__hint">💡 Bấm vào ảnh để zoom to hoặc phím mũi tên [←] [→] để chuyển ảnh</span>
     </div>
   </div>
 
@@ -452,8 +587,8 @@ Hệ thống sẽ tự nhận diện Giá, Vị trí và danh sách Nội thất
               </select>
             </div>
             <div class="form-group flex-1">
-              <label for="importArea">Diện tích</label>
-              <input type="text" id="importArea" class="form-input" placeholder="Vd: 45 m²" />
+              <label for="importArea">Diện tích (m² - tuỳ chọn)</label>
+              <input type="text" id="importArea" class="form-input" placeholder="Để trống nếu bài viết không đề cập" />
             </div>
           </div>
 
@@ -493,15 +628,228 @@ Hệ thống sẽ tự nhận diện Giá, Vị trí và danh sách Nội thất
       <button class="modal__close" id="adminModalClose" aria-label="Đóng">✕</button>
       <div class="admin-login-icon">🔐</div>
       <h2 id="adminModalTitle">Đăng Nhập Quản Trị</h2>
-      <p>Nhập mật khẩu để truy cập công cụ quản lý và đăng bài</p>
+      <p>Nhập mật khẩu để truy cập công cụ quản lý, lịch hẹn và đăng bài</p>
       
       <form id="adminLoginForm">
         <div class="login-form-group">
           <label for="adminPassword">Mật khẩu quản trị:</label>
           <input type="password" id="adminPassword" class="form-input" placeholder="Nhập mật khẩu..." required />
-          <span class="login-hint">Mật khẩu mặc định: <strong>admin123</strong> (hoặc <strong>thaoanh</strong>)</span>
         </div>
         <button type="submit" class="btn btn--login-submit">Đăng Nhập Ngay</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Form phụ dành cho Netlify Bot tự động quét và bắt dữ liệu biểu mẫu khi Deploy -->
+  <form name="dat-lich-thaoanh" netlify netlify-honeypot="bot-field" hidden>
+    <input type="text" name="aptId" />
+    <input type="text" name="aptName" />
+    <input type="text" name="customerName" />
+    <input type="text" name="customerPhone" />
+    <input type="text" name="bookDate" />
+    <input type="text" name="timeSlot" />
+    <textarea name="notes"></textarea>
+  </form>
+
+  <!-- ========== BOOKING MODAL (ĐẶT LỊCH HẸN XEM PHÒNG) ========== -->
+  <div class="modal-overlay" id="bookingModalOverlay" role="dialog" aria-modal="true" aria-labelledby="bookingModalTitle">
+    <div class="modal modal--booking" id="bookingModal">
+      <button class="modal__close" id="bookingModalClose" aria-label="Đóng">✕</button>
+      <div class="modal__header">
+        <div class="modal__header-title">
+          <span class="modal__icon-badge">📅</span>
+          <div>
+            <h2 id="bookingModalTitle" data-i18n="book_title">Hẹn Lịch Xem Phòng / Đặt Phòng</h2>
+            <p data-i18n="book_sub">Thảo Anh Apartment – Quản lý sẽ liên hệ xác nhận trong 15 – 30 phút</p>
+          </div>
+        </div>
+      </div>
+
+      <form id="bookingForm" class="booking-form" name="dat-lich-thaoanh" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="dat-lich-thaoanh" />
+        <p class="hidden"><label>Đừng điền ô này nếu bạn là người: <input name="bot-field" /></label></p>
+        <input type="hidden" id="bookAptId" name="aptId" value="" />
+
+        <div class="form-group">
+          <label for="bookAptName" data-i18n="book_apt_label">Căn hộ / Cơ sở bạn quan tâm *</label>
+          <input type="text" id="bookAptName" name="aptName" class="form-input" placeholder="Ví dụ: Căn hộ 2PN F2-C5 Nguyễn Trung Trực hoặc Studio Phù Đổng" required />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="bookCustomerName" data-i18n="book_name_label">Họ và tên của bạn *</label>
+            <input type="text" id="bookCustomerName" name="customerName" class="form-input" placeholder="Họ và tên..." required />
+          </div>
+          <div class="form-group flex-1">
+            <label for="bookCustomerPhone" data-i18n="book_phone_label">Số điện thoại / Zalo *</label>
+            <input type="tel" id="bookCustomerPhone" name="customerPhone" class="form-input" placeholder="Ví dụ: 090 387 9393" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="bookDate" data-i18n="book_date_label">Ngày muốn đến xem phòng *</label>
+            <input type="date" id="bookDate" name="bookDate" class="form-input" required />
+          </div>
+          <div class="form-group flex-1">
+            <label for="bookTimeSlot" data-i18n="book_slot_label">Khung giờ thuận tiện nhất *</label>
+            <select id="bookTimeSlot" name="timeSlot" class="form-select">
+              <option value="Sáng (09:00 - 11:30)" data-i18n="slot_morning">Buổi sáng: 09:00 – 11:30</option>
+              <option value="Chiều (14:00 - 17:30)" data-i18n="slot_afternoon" selected>Buổi chiều: 14:00 – 17:30</option>
+              <option value="Tối (18:00 - 20:00)" data-i18n="slot_evening">Buổi tối: 18:00 – 20:00</option>
+              <option value="Giờ giấc linh hoạt" data-i18n="slot_flexible">Giờ giấc linh hoạt (liên hệ trước)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="bookNotes" data-i18n="book_notes_label">Nhu cầu cụ thể hoặc ghi chú thêm (tuỳ chọn):</label>
+          <textarea id="bookNotes" name="notes" class="form-textarea" rows="2" placeholder="Ví dụ: Dự kiến ở 2 người, có xe máy, muốn dọn vào đầu tuần tới..."></textarea>
+        </div>
+
+        <div class="booking-actions">
+          <button type="button" class="btn btn--secondary" id="bookModalCancel" data-i18n="book_cancel">Hủy</button>
+          <button type="submit" class="btn btn--booking-submit" id="bookSubmitBtn">
+            <span data-i18n="book_submit">🚀 Gửi Yêu Cầu Đặt Lịch</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Màn hình thông báo thành công -->
+      <div class="booking-success hidden" id="bookingSuccessBox">
+        <div class="success-icon">🎉</div>
+        <h3 data-i18n="book_succ_title">Đặt Lịch Hẹn Thành Công!</h3>
+        <p class="success-desc" data-i18n="book_succ_desc">Cảm ơn bạn đã quan tâm. Quản lý hệ thống <strong>Thảo Anh Apartment</strong> đã nhận được thông tin và sẽ gọi điện hoặc nhắn tin Zalo xác nhận lịch hẹn trong ít phút.</p>
+        
+        <div class="success-details" id="bookingSuccessDetails"></div>
+
+        <div class="success-quick-contact">
+          <a href="tel:0903879393" class="btn btn--phone">
+            📞 Hotline: 090 387 93 93 (Thảo)
+          </a>
+        </div>
+        <button type="button" class="btn btn--secondary btn--sm" id="btnBookingSuccessDone" data-i18n="book_succ_done">Hoàn tất &amp; Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== ADMIN APPOINTMENTS MODAL (QUẢN LÝ LỊCH HẸN CHO ADMIN) ========== -->
+  <div class="modal-overlay" id="appointmentsModalOverlay" role="dialog" aria-modal="true" aria-labelledby="appointmentsModalTitle">
+    <div class="modal modal--appointments" id="appointmentsModal">
+      <button class="modal__close" id="appointmentsModalClose" aria-label="Đóng">✕</button>
+      <div class="modal__header">
+        <div class="modal__header-title">
+          <span class="modal__icon-badge">📋</span>
+          <div>
+            <h2 id="appointmentsModalTitle">Quản Lý Lịch Hẹn Xem Phòng</h2>
+            <p>Danh sách các khách hàng gửi yêu cầu hẹn lịch xem phòng và đặt phòng</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="appointments-toolbar">
+        <div class="apt-stat-filters">
+          <button class="apt-pill active" data-filter="all">Tất cả (<span id="countAptAll">0</span>)</button>
+          <button class="apt-pill" data-filter="pending">Chờ liên hệ (<span id="countAptPending">0</span>)</button>
+          <button class="apt-pill" data-filter="confirmed">Đã xác nhận (<span id="countAptConfirmed">0</span>)</button>
+          <button class="apt-pill" data-filter="done">Đã xem/Chốt (<span id="countAptDone">0</span>)</button>
+        </div>
+        <button type="button" class="btn btn--sm btn--danger-outline" id="btnClearAppointments" title="Xoá tất cả lịch hẹn đã xong">
+          🗑️ Xóa danh sách
+        </button>
+      </div>
+
+      <div class="appointments-content" id="appointmentsList">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== EDIT POST MODAL (ADMIN CHỈNH SỬA BÀI ĐĂNG) ========== -->
+  <div class="modal-overlay" id="editModalOverlay" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+    <div class="modal modal--edit" id="editModal">
+      <button class="modal__close" id="editModalClose" aria-label="Đóng">✕</button>
+      <div class="modal__header">
+        <div class="modal__header-title">
+          <span class="modal__icon-badge">✏️</span>
+          <div>
+            <h2 id="editModalTitle">Chỉnh Sửa Bài Đăng Căn Hộ</h2>
+            <p>Cập nhật tiêu đề, giá, cơ sở, diện tích, nội thất và danh sách ảnh</p>
+          </div>
+        </div>
+      </div>
+
+      <form id="editPostForm" class="edit-post-form">
+        <input type="hidden" id="editPostId" value="" />
+
+        <div class="form-row">
+          <div class="form-group flex-3">
+            <label for="editTitle">Tiêu đề căn hộ *</label>
+            <input type="text" id="editTitle" class="form-input" required />
+          </div>
+          <div class="form-group flex-1">
+            <label for="editTag">Nhãn (Tag)</label>
+            <input type="text" id="editTag" class="form-input" placeholder="Vd: Thảo Anh, Giá rẻ..." />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="editPrice">Giá thuê (VNĐ/tháng) *</label>
+            <input type="text" id="editPrice" class="form-input" required />
+          </div>
+          <div class="form-group flex-1">
+            <label for="editDistrict">Cơ sở tại Đà Lạt *</label>
+            <select id="editDistrict" class="form-select">
+              <option value="61/18 Phù Đổng">CS2: 61/18 Phù Đổng Thiên Vương (P.8)</option>
+              <option value="Ngô Thì Sỹ">CS1: 74D Ngô Thì Sỹ (P.4)</option>
+              <option value="Nguyễn Trung Trực">CS3: F2-C5 Nguyễn Trung Trực (P.4)</option>
+              <option value="61/7 Phù Đổng">CS4: 61/7 Phù Đổng Thiên Vương (P.8)</option>
+            </select>
+          </div>
+          <div class="form-group flex-1">
+            <label for="editRoom">Loại phòng</label>
+            <select id="editRoom" class="form-select">
+              <option value="2PN">2 Phòng ngủ (2PN)</option>
+              <option value="1PN">1 Phòng ngủ (1PN)</option>
+              <option value="Studio">Studio / Gác lửng</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-2">
+            <label for="editAddress">Địa chỉ chi tiết *</label>
+            <input type="text" id="editAddress" class="form-input" required />
+          </div>
+          <div class="form-group flex-1">
+            <label for="editArea">Diện tích (m² - tuỳ chọn)</label>
+            <input type="text" id="editArea" class="form-input" placeholder="Để trống nếu bài viết không đề cập" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="editImages">Danh sách link ảnh (mỗi dòng hoặc dấu phẩy là 1 link ảnh):</label>
+          <textarea id="editImages" class="form-textarea" rows="3" placeholder="https://..."></textarea>
+          <span class="form-hint">Dán link ảnh chất lượng cao hoặc link từ Facebook bài viết</span>
+        </div>
+
+        <div class="form-group">
+          <label for="editAmenities">Danh sách tiện nghi / nội thất (cách nhau bởi dấu phẩy):</label>
+          <input type="text" id="editAmenities" class="form-input" placeholder="Sofa, Giường nệm, Tủ lạnh, Máy giặt riêng, Bếp điện, Nóng lạnh, Ban công view đồi..." />
+        </div>
+
+        <div class="form-group">
+          <label for="editDescription">Mô tả chi tiết bài viết:</label>
+          <textarea id="editDescription" class="form-textarea" rows="4"></textarea>
+        </div>
+
+        <div class="edit-modal-footer">
+          <button type="button" class="btn btn--secondary" id="editModalCancel">Hủy</button>
+          <button type="submit" class="btn btn--save-edit" id="btnSaveEdit">
+            💾 Lưu Cập Nhật Bài Viết
+          </button>
+        </div>
       </form>
     </div>
   </div>
@@ -512,30 +860,29 @@ Hệ thống sẽ tự nhận diện Giá, Vị trí và danh sách Nội thất
   <!-- ========== FLOATING BUTTONS (THẢO ANH APARTMENT) ========== -->
   <div class="float-group" id="floatGroup">
 
-    <a href="https://zalo.me/0901351815" class="float-btn float-btn--zalo" target="_blank" aria-label="Zalo Thảo Anh">
       <span class="float-btn__icon">
         <svg width="22" height="22" viewBox="0 0 50 50" fill="currentColor"><path d="M25 3C12.85 3 3 12.85 3 25s9.85 22 22 22 22-9.85 22-22S37.15 3 25 3zm-4.15 30.6H16.1V20.15h4.75V33.6zm-2.38-15.25a2.75 2.75 0 110-5.5 2.75 2.75 0 010 5.5zM36.4 33.6h-4.72v-6.65c0-1.76-.63-2.95-2.19-2.95-1.2 0-1.91.8-2.22 1.58-.11.28-.14.66-.14 1.05v7h-4.72s.06-11.35 0-12.53H27v1.78c.63-.97 1.75-2.35 4.26-2.35 3.11 0 5.44 2.03 5.44 6.4V33.6z"/></svg>
       </span>
       <span class="float-btn__label">Zalo: 090 135 18 15</span>
     </a>
 
-    <a href="https://m.me/thaoanhapartmentdalat" class="float-btn float-btn--messenger" target="_blank" aria-label="Messenger Thảo Anh">
-      <span class="float-btn__icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 4.975 0 11.111c0 3.497 1.745 6.616 4.472 8.652V24l4.086-2.242c1.09.301 2.246.464 3.442.464 6.627 0 12-4.975 12-11.111C24 4.975 18.627 0 12 0zm1.193 14.963l-3.056-3.259-5.963 3.259 6.559-6.963 3.13 3.259 5.889-3.259-6.559 6.963z"/></svg>
-      </span>
-      <span class="float-btn__label">Messenger</span>
-    </a>
-
-    <a href="tel:0903879393" class="float-btn float-btn--phone" aria-label="Hotline Thảo Anh">
+    <a href="tel:0559521514" class="float-btn float-btn--messenger" target="_blank" aria-label="Liên hệ Phương: 055 952 15 14">
       <span class="float-btn__icon">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
       </span>
-      <span class="float-btn__label">090 387 93 93</span>
+      <span class="float-btn__label">055 952 15 14 (Phương)</span>
+    </a>
+
+    <a href="tel:0903879393" class="float-btn float-btn--phone" aria-label="Hotline Thảo">
+      <span class="float-btn__icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+      </span>
+      <span class="float-btn__label">090 387 93 93 (Thảo)</span>
     </a>
 
   </div>
 
-  <script src="apify-data.js?v=1"></script>
-  <script src="app.js?v=9"></script>
+  <script src="apify-data.js?v=2"></script>
+  <script src="app.js?v=17"></script>
 </body>
 </html>
