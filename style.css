@@ -2078,6 +2078,7 @@ body.modal-open { overflow: hidden; }
   align-items: center;
   justify-content: space-between;
   background: #fafbfc;
+  flex-shrink: 0;
 }
 .modal__header-title {
   display: flex;
@@ -2756,6 +2757,185 @@ body:not(.is-admin) .card__delete-btn { display: none !important; }
   max-height: 85vh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  #appointmentsModalOverlay {
+    align-items: flex-end !important;
+    padding: 0 !important;
+  }
+  .modal--appointments {
+    width: 100% !important;
+    max-width: 100vw !important;
+    height: 94svh !important;
+    height: 94vh !important;
+    max-height: 94svh !important;
+    border-radius: 20px 20px 0 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+  .modal--appointments .modal__close {
+    top: 10px !important;
+    right: 12px !important;
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.9rem !important;
+    z-index: 20;
+  }
+  .modal--appointments .modal__header {
+    padding: 12px 48px 10px 14px !important;
+    flex-shrink: 0;
+  }
+  .modal--appointments .modal__header-title {
+    gap: 8px;
+  }
+  .modal--appointments .modal__icon-badge {
+    font-size: 1.3rem;
+  }
+  .modal--appointments .modal__header-title h2 {
+    font-size: 1rem !important;
+    line-height: 1.25;
+  }
+  .modal--appointments .modal__header-title p {
+    font-size: 11px !important;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .modal--appointments .appointments-cloud-bar {
+    padding: 8px 12px !important;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .modal--appointments .cloud-status-info {
+    font-size: 11.5px !important;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .modal--appointments .cloud-actions {
+    width: 100% !important;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    flex-wrap: nowrap !important;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 2px;
+  }
+  .modal--appointments .cloud-actions .btn--xs {
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+  .modal--appointments .appointments-toolbar {
+    padding: 8px 12px !important;
+    gap: 8px;
+    flex-shrink: 0;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .modal--appointments .apt-stat-filters {
+    width: 100% !important;
+    display: flex !important;
+    gap: 6px !important;
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+  .modal--appointments .apt-stat-filters::-webkit-scrollbar {
+    display: none;
+  }
+  .modal--appointments .apt-pill {
+    padding: 4px 10px !important;
+    font-size: 11px !important;
+    white-space: nowrap !important;
+    flex-shrink: 0;
+  }
+  .modal--appointments #btnClearAppointments {
+    width: 100%;
+    justify-content: center;
+    padding: 4px 8px;
+    font-size: 11.5px;
+    margin: 0;
+  }
+  .modal--appointments .appointments-content {
+    padding: 10px 12px 28px !important;
+    gap: 10px !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .modal--appointments .appointment-card {
+    padding: 12px !important;
+    gap: 8px !important;
+    border-radius: 12px;
+  }
+  .modal--appointments .apt-card__top {
+    flex-direction: column !important;
+    gap: 6px !important;
+    align-items: flex-start !important;
+  }
+  .modal--appointments .apt-card__customer {
+    width: 100%;
+  }
+  .modal--appointments .apt-card__name {
+    font-size: 0.98rem !important;
+    word-break: break-word;
+  }
+  .modal--appointments .apt-card__contact-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  .modal--appointments .btn-tel,
+  .modal--appointments .btn-zalo-direct {
+    padding: 3px 8px;
+    font-size: 11.5px;
+  }
+  .modal--appointments .apt-badge {
+    align-self: flex-start;
+  }
+  .modal--appointments .apt-card__info {
+    padding: 8px 10px !important;
+    font-size: 12px !important;
+    gap: 4px;
+    line-height: 1.45;
+    word-break: break-word;
+  }
+  .modal--appointments .apt-card__actions {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    padding-top: 8px;
+  }
+  .modal--appointments .apt-card__actions label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    width: 100%;
+  }
+  .modal--appointments .apt-status-select {
+    flex: 1;
+    max-width: 65%;
+    font-size: 11.5px;
+    padding: 4px 6px;
+  }
+  .modal--appointments .btn-delete-booking {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+  }
 }
 
 /* Realtime Cloud Bar & Settings */
@@ -2768,6 +2948,7 @@ body:not(.is-admin) .card__delete-btn { display: none !important; }
   padding: 10px 24px;
   background: #f0fdf4;
   border-bottom: 1px solid #bbf7d0;
+  flex-shrink: 0;
 }
 .cloud-status-info {
   display: flex;
@@ -2846,6 +3027,7 @@ body:not(.is-admin) .card__delete-btn { display: none !important; }
   flex-direction: column;
   gap: 12px;
   animation: slideDownFade 0.25s ease-out;
+  flex-shrink: 0;
 }
 @keyframes slideDownFade {
   from { opacity: 0; transform: translateY(-8px); }
@@ -2922,6 +3104,24 @@ body:not(.is-admin) .card__delete-btn { display: none !important; }
   padding: 12px 24px;
   background: #f8faf8;
   border-bottom: 1px solid var(--clr-border);
+  flex-shrink: 0;
+}
+@media (max-width: 640px) {
+  .appointments-toolbar {
+    padding: 10px 12px;
+  }
+  .apt-stat-filters {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .apt-stat-filters::-webkit-scrollbar { display: none; }
+  .apt-pill {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
 }
 .apt-stat-filters {
   display: flex;
@@ -2950,7 +3150,14 @@ body:not(.is-admin) .card__delete-btn { display: none !important; }
   display: flex;
   flex-direction: column;
   gap: 14px;
-  max-height: calc(85vh - 160px);
+  flex: 1;
+  min-height: 0;
+}
+@media (max-width: 640px) {
+  .appointments-content {
+    padding: 12px;
+    gap: 10px;
+  }
 }
 .appointment-card {
   background: #ffffff;
@@ -2977,6 +3184,16 @@ body:not(.is-admin) .card__delete-btn { display: none !important; }
   justify-content: space-between;
   align-items: flex-start;
   gap: 12px;
+  flex-wrap: wrap;
+}
+@media (max-width: 640px) {
+  .apt-card__top {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .apt-badge {
+    align-self: flex-start;
+  }
 }
 .apt-card__customer {
   display: flex;
@@ -3037,6 +3254,24 @@ body:not(.is-admin) .card__delete-btn { display: none !important; }
   padding-top: 6px;
   border-top: 1px solid #f3f4f6;
   font-size: 12.5px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+@media (max-width: 640px) {
+  .apt-card__actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+  .apt-card__actions label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .apt-card__actions .btn-delete-booking {
+    width: 100%;
+    justify-content: center;
+  }
 }
 .apt-status-select {
   padding: 4px 8px;

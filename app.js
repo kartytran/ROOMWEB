@@ -22,8 +22,9 @@ const LAST_SYNC_KEY         = 'thaoanh_last_apify_sync_time';
 const STORAGE_CUSTOM_KEY    = 'thaoanh_custom_posts';
 const STORAGE_EDITED_KEY    = 'thaoanh_edited_posts';
 const STORAGE_DELETED_KEY   = 'thaoanh_deleted_posts';
-const STORAGE_BOOKINGS_KEY  = 'thaoanh_bookings';
-const ADMIN_STORAGE_KEY     = 'thaoanh_admin_logged';
+const STORAGE_BOOKINGS_KEY          = 'thaoanh_bookings';
+const STORAGE_DELETED_BOOKINGS_KEY  = 'thaoanh_deleted_bookings';
+const ADMIN_STORAGE_KEY             = 'thaoanh_admin_logged';
 const LANG_STORAGE_KEY      = 'thaoanh_lang';
 const VALID_PASSWORDS       = ['admin123', 'thaoanh', 'thaoanh2024', '123456'];
 
@@ -613,10 +614,42 @@ async function fetchApifyLive(force = false) {
 /* ============================================================
    APPOINTMENTS & BOOKING SYSTEM (ĐẶT LỊCH HẸN & QUẢN LÝ ADMIN)
    ============================================================ */
+function isBookingDeleted(id) {
+  if (!id) return true;
+  const idStr = String(id).toUpperCase();
+  // Tất cả các lịch hẹn demo/test luôn luôn bị loại bỏ vĩnh viễn
+  if (idStr.startsWith('BK-TEST') || idStr.startsWith('BK-VERIFY')) return true;
+  const ids = getDeletedBookingIds();
+  return ids.includes(String(id));
+}
+
+function getDeletedBookingIds() {
+  try {
+    const raw = localStorage.getItem(STORAGE_DELETED_BOOKINGS_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (_) {}
+  return [];
+}
+
+function markBookingDeleted(id) {
+  if (!id) return;
+  const idStr = String(id);
+  const ids = getDeletedBookingIds();
+  if (!ids.includes(idStr)) {
+    ids.push(idStr);
+    localStorage.setItem(STORAGE_DELETED_BOOKINGS_KEY, JSON.stringify(ids));
+  }
+}
+
 function getBookings() {
   try {
     const raw = localStorage.getItem(STORAGE_BOOKINGS_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        return parsed.filter(b => b && b.id && !isBookingDeleted(b.id));
+      }
+    }
   } catch (e) {
     console.error('Error reading bookings', e);
   }
@@ -624,7 +657,8 @@ function getBookings() {
 }
 
 function saveBookings(list) {
-  localStorage.setItem(STORAGE_BOOKINGS_KEY, JSON.stringify(list));
+  const cleanList = Array.isArray(list) ? list.filter(b => b && b.id && !isBookingDeleted(b.id)) : [];
+  localStorage.setItem(STORAGE_BOOKINGS_KEY, JSON.stringify(cleanList));
   updateBookingBadges();
 }
 
@@ -811,6 +845,8 @@ function mergeCloudBookings(cloudBookings) {
 
   cloudBookings.forEach(cb => {
     if (!cb.id) return;
+    // Bỏ qua các lịch hẹn đã bị Admin xóa hoặc lịch demo test (không bao giờ khôi phục lại)
+    if (isBookingDeleted(cb.id)) return;
     if (!localMap.has(cb.id)) {
       // Lịch hẹn mới từ thiết bị khác!
       localMap.set(cb.id, cb);
@@ -825,7 +861,9 @@ function mergeCloudBookings(cloudBookings) {
     }
   });
 
-  const merged = Array.from(localMap.values()).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  const merged = Array.from(localMap.values())
+    .filter(b => b && b.id && !isBookingDeleted(b.id))
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   localStorage.setItem(STORAGE_BOOKINGS_KEY, JSON.stringify(merged));
   updateBookingBadges();
 
@@ -1347,10 +1385,11 @@ function renderAppointmentsList() {
     btn.addEventListener('click', (e) => {
       const id = e.currentTarget.dataset.id;
       if (confirm('Bạn có chắc muốn xóa lịch hẹn này khỏi danh sách?')) {
+        markBookingDeleted(id);
         const remaining = getBookings().filter(b => b.id !== id);
         saveBookings(remaining);
         renderAppointmentsList();
-        showToast('🗑️ Đã xóa lịch hẹn.');
+        showToast('🗑️ Đã xóa lịch hẹn vĩnh viễn.');
       }
     });
   });
@@ -2307,9 +2346,11 @@ function initAdminAuth() {
   if (btnClearAppointments) {
     btnClearAppointments.addEventListener('click', () => {
       if (confirm('Bạn có chắc muốn xoá toàn bộ danh sách lịch hẹn không?')) {
+        const allBookings = getBookings();
+        allBookings.forEach(b => { if (b.id) markBookingDeleted(b.id); });
         saveBookings([]);
         renderAppointmentsList();
-        showToast('🗑️ Đã xóa toàn bộ lịch hẹn.');
+        showToast('🗑️ Đã xóa toàn bộ lịch hẹn vĩnh viễn.');
       }
     });
   }
@@ -2706,6 +2747,12 @@ function init() {
   initLanguage();
   initAdminAuth();
   initAppointmentsCloudUI();
+
+  // Đảm bảo các lịch hẹn demo/test luôn luôn bị xóa vĩnh viễn
+  ['BK-TEST999', 'BK-VERIFY-001'].forEach(id => markBookingDeleted(id));
+  const currentBookings = getBookings();
+  saveBookings(currentBookings);
+
   activeData = getAllPosts();
   renderCards(activeData);
   initSmartImporter();
